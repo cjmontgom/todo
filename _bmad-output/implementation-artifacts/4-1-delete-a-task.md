@@ -1,6 +1,6 @@
 # Story 4.1: Delete a Task
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -28,51 +28,51 @@ So that my list stays clean.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add `deleteTask()` to `backend/src/db.ts` (AC: #1)
-  - [ ] Add function that DELETEs a row by `id` and returns a boolean indicating whether a row was deleted
-  - [ ] Use parameterised query: `DELETE FROM tasks WHERE id = $1 RETURNING id`
-  - [ ] Return `true` if a row was deleted, `false` if no row matched
-- [ ] Task 2: Add `DELETE /api/tasks/:id` route to `backend/src/routes.ts` (AC: #1)
-  - [ ] Add route handler with Fastify JSON schema validation on params (`{ id: string }`)
-  - [ ] Schema must include `type` property (Fastify v5 requirement)
-  - [ ] Parse `id` from params as integer
-  - [ ] On success return `204` with empty body
-  - [ ] Return `404` with `{ "error": "Task not found" }` if no row matched
-  - [ ] Catch DB errors and return `500` with `{ "error": "Something went wrong" }`
-- [ ] Task 3: Add `deleteTask()` to `frontend/src/api.ts` (AC: #1)
-  - [ ] DELETE to `${API_URL}/api/tasks/${id}`
-  - [ ] No response body expected — just check for `response.ok`
-  - [ ] Throw on non-ok response
-- [ ] Task 4: Create `DeleteButton` component (AC: #2, #3, #4)
-  - [ ] Create `frontend/src/components/DeleteButton.tsx`
-  - [ ] Render a `<button>` with an "×" or trash icon (SVG)
-  - [ ] Accept `onClick` callback prop and `disabled` boolean prop
-  - [ ] Accept `label` string prop for `aria-label` (e.g. "Delete task: Buy groceries")
-  - [ ] 44x44px minimum tap target (`w-11 h-11 flex items-center justify-center`)
-  - [ ] Desktop: hidden by default, revealed on parent hover — `opacity-0 sm:group-hover:opacity-100` with `transition-opacity duration-200 ease-out`
-  - [ ] Mobile: always visible — `opacity-100 sm:opacity-0` (mobile-first, hidden on sm and above until hover)
-  - [ ] Disabled state: `disabled:opacity-50 disabled:cursor-not-allowed`
-  - [ ] Colour: `text-text-secondary hover:text-coral-dark`
-  - [ ] Focus ring: `focus:outline-2 focus:outline-coral focus:outline-offset-2`
-- [ ] Task 5: Update TaskItem to support delete (AC: #1, #2, #3, #4)
-  - [ ] Add `onDelete?: (id: number) => Promise<void>` prop to TaskItem
-  - [ ] Add local `deleting` state to track in-flight delete requests
-  - [ ] On delete button click: set `deleting = true`, call `onDelete(task.id)`, set `deleting = false` on completion
-  - [ ] Pass `onClick`, `disabled={deleting}`, and correct `label` to DeleteButton
-  - [ ] Add `group` class to the task row container (for `group-hover` to work on DeleteButton)
-  - [ ] While deleting, apply subtle `opacity-70` to the entire task row
-  - [ ] Layout: Checkbox | task text | DeleteButton (push DeleteButton to the right edge)
-- [ ] Task 6: Wire delete through TaskList to App.tsx (AC: #1)
-  - [ ] Add `onDelete?: (id: number) => Promise<void>` prop to TaskList
-  - [ ] Pass `onDelete` through to each TaskItem
-  - [ ] In App.tsx, add `handleDeleteTask(id: number)` function
-  - [ ] Call `deleteTask(id)` from api.ts
-  - [ ] On success: remove the task from local `tasks` state by filtering out the deleted id
-  - [ ] On failure: silently fail (no UI change since no optimistic UI was applied) — Toast error notification deferred to Story 5.1
-- [ ] Task 7: Add tests (AC: #1, #2, #4)
-  - [ ] Add `DELETE /api/tasks/:id` backend tests in `backend/src/routes.test.ts`: success (204), not found (404), DB error (500)
-  - [ ] Update `frontend/src/components/TaskItem.test.tsx`: test delete callback fires on button click, disabled state during delete
-  - [ ] Update `frontend/src/App.test.tsx`: test delete flow (task removed from list after delete), test delete failure keeps task in list
+- [x] Task 1: Add `deleteTask()` to `backend/src/db.ts` (AC: #1)
+  - [x] Add function that DELETEs a row by `id` and returns a boolean indicating whether a row was deleted
+  - [x] Use parameterised query: `DELETE FROM tasks WHERE id = $1 RETURNING id`
+  - [x] Return `true` if a row was deleted, `false` if no row matched
+- [x] Task 2: Add `DELETE /api/tasks/:id` route to `backend/src/routes.ts` (AC: #1)
+  - [x] Add route handler with Fastify JSON schema validation on params (`{ id: string }`)
+  - [x] Schema must include `type` property (Fastify v5 requirement)
+  - [x] Parse `id` from params as integer
+  - [x] On success return `204` with empty body
+  - [x] Return `404` with `{ "error": "Task not found" }` if no row matched
+  - [x] Catch DB errors and return `500` with `{ "error": "Something went wrong" }`
+- [x] Task 3: Add `deleteTask()` to `frontend/src/api.ts` (AC: #1)
+  - [x] DELETE to `${API_URL}/api/tasks/${id}`
+  - [x] No response body expected — just check for `response.ok`
+  - [x] Throw on non-ok response
+- [x] Task 4: Create `DeleteButton` component (AC: #2, #3, #4)
+  - [x] Create `frontend/src/components/DeleteButton.tsx`
+  - [x] Render a `<button>` with an "×" or trash icon (SVG)
+  - [x] Accept `onClick` callback prop and `disabled` boolean prop
+  - [x] Accept `label` string prop for `aria-label` (e.g. "Delete task: Buy groceries")
+  - [x] 44x44px minimum tap target (`w-11 h-11 flex items-center justify-center`)
+  - [x] Desktop: hidden by default, revealed on parent hover — `opacity-0 sm:group-hover:opacity-100` with `transition-opacity duration-200 ease-out`
+  - [x] Mobile: always visible — `opacity-100 sm:opacity-0` (mobile-first, hidden on sm and above until hover)
+  - [x] Disabled state: `disabled:opacity-50 disabled:cursor-not-allowed`
+  - [x] Colour: `text-text-secondary hover:text-coral-dark`
+  - [x] Focus ring: `focus:outline-2 focus:outline-coral focus:outline-offset-2`
+- [x] Task 5: Update TaskItem to support delete (AC: #1, #2, #3, #4)
+  - [x] Add `onDelete?: (id: number) => Promise<void>` prop to TaskItem
+  - [x] Add local `deleting` state to track in-flight delete requests
+  - [x] On delete button click: set `deleting = true`, call `onDelete(task.id)`, set `deleting = false` on completion
+  - [x] Pass `onClick`, `disabled={deleting}`, and correct `label` to DeleteButton
+  - [x] Add `group` class to the task row container (for `group-hover` to work on DeleteButton)
+  - [x] While deleting, apply subtle `opacity-70` to the entire task row
+  - [x] Layout: Checkbox | task text | DeleteButton (push DeleteButton to the right edge)
+- [x] Task 6: Wire delete through TaskList to App.tsx (AC: #1)
+  - [x] Add `onDelete?: (id: number) => Promise<void>` prop to TaskList
+  - [x] Pass `onDelete` through to each TaskItem
+  - [x] In App.tsx, add `handleDeleteTask(id: number)` function
+  - [x] Call `deleteTask(id)` from api.ts
+  - [x] On success: remove the task from local `tasks` state by filtering out the deleted id
+  - [x] On failure: silently fail (no UI change since no optimistic UI was applied) — Toast error notification deferred to Story 5.1
+- [x] Task 7: Add tests (AC: #1, #2, #4)
+  - [x] Add `DELETE /api/tasks/:id` backend tests in `backend/src/routes.test.ts`: success (204), not found (404), DB error (500)
+  - [x] Update `frontend/src/components/TaskItem.test.tsx`: test delete callback fires on button click, disabled state during delete
+  - [x] Update `frontend/src/App.test.tsx`: test delete flow (task removed from list after delete), test delete failure keeps task in list
 
 ## Dev Notes
 
@@ -325,3 +325,35 @@ backend/src/
 - [Source: epics.md#Story 4.1] — acceptance criteria and story definition
 - [Source: epics.md#Epic 4] — FR4 (delete task)
 - [Source: prd.md#FR4] — user can delete a task permanently
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- All 7 tasks implemented following the story spec exactly
+- Backend: `deleteTask()` in db.ts uses `DELETE ... RETURNING id` pattern; route follows existing PATCH pattern with params schema validation
+- Frontend: `DeleteButton` component with SVG × icon, mobile-first responsive visibility (`opacity-100 sm:opacity-0 sm:group-hover:opacity-100`), 44px tap target, and proper ARIA labelling
+- TaskItem updated with `group` class, `deleting` state (mirrors existing `toggling` pattern), and three-column flex layout (checkbox | text | delete)
+- App.tsx `handleDeleteTask` removes task from state only after API confirms (no optimistic UI), silent catch per spec (Toast deferred to 5.1)
+- No new dependencies, no changes to server.ts, no confirmation dialog — all per anti-patterns list
+
+### Debug Log
+
+No issues encountered during implementation.
+
+## File List
+
+- `backend/src/db.ts` — Modified: added `deleteTask()` function
+- `backend/src/routes.ts` — Modified: added `DELETE /api/tasks/:id` route, imported `deleteTask`
+- `backend/src/routes.test.ts` — Modified: added `deleteTaskMock` and 3 DELETE test cases
+- `frontend/src/api.ts` — Modified: added `deleteTask()` function
+- `frontend/src/components/DeleteButton.tsx` — New: DeleteButton component with responsive visibility
+- `frontend/src/components/TaskItem.tsx` — Modified: added `onDelete` prop, `deleting` state, `group` class, DeleteButton integration
+- `frontend/src/components/TaskList.tsx` — Modified: added `onDelete` prop, passed through to TaskItem
+- `frontend/src/App.tsx` — Modified: added `handleDeleteTask`, imported `deleteTask`, passed `onDelete` to TaskList
+- `frontend/src/components/TaskItem.test.tsx` — Modified: added 4 delete interaction tests
+- `frontend/src/App.test.tsx` — Modified: added 2 delete integration tests
+
+## Change Log
+
+- 2026-03-12: Implemented Story 4.1 — Delete a Task. Added full-stack delete functionality with backend endpoint (DELETE /api/tasks/:id), frontend API function, DeleteButton component with responsive hover-reveal, and comprehensive test coverage (15 backend + 35 frontend tests all passing).
