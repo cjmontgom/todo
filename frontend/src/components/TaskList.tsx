@@ -10,9 +10,10 @@ interface TaskListProps {
   error: string | null
   onRetry: () => void
   onToggle?: (id: number, completed: boolean) => Promise<void>
+  onDelete?: (id: number) => Promise<void>
 }
 
-export function TaskList({ tasks, loading, error, onRetry, onToggle }: TaskListProps) {
+export function TaskList({ tasks, loading, error, onRetry, onToggle, onDelete }: TaskListProps) {
   if (loading) {
     return <LoadingState />
   }
@@ -34,7 +35,7 @@ export function TaskList({ tasks, loading, error, onRetry, onToggle }: TaskListP
     <ul aria-label={`Task list, ${tasks.length} items`}>
       {sorted.map((task) => (
         <li key={task.id}>
-          <TaskItem task={task} onToggle={onToggle} />
+          <TaskItem task={task} onToggle={onToggle} onDelete={onDelete} />
         </li>
       ))}
     </ul>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchTasks, createTask, toggleTask } from './api'
+import { fetchTasks, createTask, toggleTask, deleteTask } from './api'
 import type { Task } from './types'
 import { AppShell } from './components/AppShell'
 import { AppHeader } from './components/AppHeader'
@@ -48,6 +48,15 @@ function App() {
     }
   }
 
+  const handleDeleteTask = async (id: number) => {
+    try {
+      await deleteTask(id)
+      setTasks((prev) => prev.filter((t) => t.id !== id))
+    } catch {
+      // Silent failure — Toast error notification deferred to Story 5.1
+    }
+  }
+
   useEffect(() => {
     loadTasks()
   }, [])
@@ -66,6 +75,7 @@ function App() {
         error={error}
         onRetry={loadTasks}
         onToggle={handleToggleTask}
+        onDelete={handleDeleteTask}
       />
     </AppShell>
   )

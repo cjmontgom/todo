@@ -148,6 +148,48 @@ describe('App', () => {
     expect(screen.getByText('Buy groceries')).not.toHaveClass('line-through')
   })
 
+  it('deletes a task and removes it from the list', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.deleteTask).mockResolvedValue(undefined)
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    const deleteBtn = screen.getByRole('button', { name: 'Delete task: Buy groceries' })
+    await user.click(deleteBtn)
+
+    await waitFor(() => {
+      expect(screen.queryByText('Buy groceries')).not.toBeInTheDocument()
+    })
+    expect(api.deleteTask).toHaveBeenCalledWith(1)
+    expect(screen.getByText('Walk the dog')).toBeInTheDocument()
+  })
+
+  it('keeps task in list when delete fails', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.deleteTask).mockRejectedValue(new Error('Network error'))
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    const deleteBtn = screen.getByRole('button', { name: 'Delete task: Buy groceries' })
+    await user.click(deleteBtn)
+
+    await waitFor(() => {
+      expect(api.deleteTask).toHaveBeenCalledWith(1)
+    })
+
+    expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+  })
+
   it('shows inline error when task creation fails', async () => {
     const user = userEvent.setup()
     vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)

@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import type { Task } from '../types'
 import { Checkbox } from './Checkbox'
+import { DeleteButton } from './DeleteButton'
 
 interface TaskItemProps {
   task: Task
   onToggle?: (id: number, completed: boolean) => Promise<void>
+  onDelete?: (id: number) => Promise<void>
 }
 
-export function TaskItem({ task, onToggle }: TaskItemProps) {
+export function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
   const [toggling, setToggling] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const handleToggle = async () => {
     if (!onToggle) return
@@ -20,10 +23,20 @@ export function TaskItem({ task, onToggle }: TaskItemProps) {
     }
   }
 
+  const handleDelete = async () => {
+    if (!onDelete) return
+    setDeleting(true)
+    try {
+      await onDelete(task.id)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   return (
     <div
-      className={`flex items-center border-b border-border py-3 sm:py-4 transition-all duration-200 ease-out ${
-        toggling ? 'opacity-70' : ''
+      className={`group flex items-center border-b border-border py-3 sm:py-4 transition-all duration-200 ease-out ${
+        toggling || deleting ? 'opacity-70' : ''
       }`}
     >
       <Checkbox
@@ -34,17 +47,24 @@ export function TaskItem({ task, onToggle }: TaskItemProps) {
             : `Mark ${task.text} as complete`
         }
         onChange={onToggle ? handleToggle : undefined}
-        disabled={toggling}
+        disabled={toggling || deleting}
       />
       <span
-        className={
+        className={`flex-1 ${
           task.completed
             ? 'line-through text-completed'
             : 'text-text-primary'
-        }
+        }`}
       >
         {task.text}
       </span>
+      {onDelete && (
+        <DeleteButton
+          onClick={handleDelete}
+          disabled={deleting}
+          label={`Delete task: ${task.text}`}
+        />
+      )}
     </div>
   )
 }

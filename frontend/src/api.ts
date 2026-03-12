@@ -22,6 +22,15 @@ export async function toggleTask(id: number, completed: boolean): Promise<Task> 
   return response.json()
 }
 
+export async function deleteTask(id: number): Promise<void> {
+  const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+    method: 'DELETE',
+  })
+  if (!response.ok) {
+    throw new Error('Failed to delete task')
+  }
+}
+
 export async function createTask(text: string): Promise<Task> {
   const response = await fetch(`${API_URL}/api/tasks`, {
     method: 'POST',

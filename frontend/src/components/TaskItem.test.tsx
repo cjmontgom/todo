@@ -70,4 +70,51 @@ describe('TaskItem', () => {
       expect(screen.getByRole('checkbox')).not.toBeDisabled()
     })
   })
+
+  it('renders delete button with correct aria-label when onDelete provided', () => {
+    const task: Task = { id: 1, text: 'Buy milk', completed: false, createdAt: '2026-03-12T10:00:00.000Z' }
+    render(<TaskItem task={task} onDelete={vi.fn()} />)
+
+    const deleteBtn = screen.getByRole('button', { name: 'Delete task: Buy milk' })
+    expect(deleteBtn).toBeInTheDocument()
+  })
+
+  it('does not render delete button when onDelete not provided', () => {
+    const task: Task = { id: 1, text: 'Buy milk', completed: false, createdAt: '2026-03-12T10:00:00.000Z' }
+    render(<TaskItem task={task} />)
+
+    expect(screen.queryByRole('button', { name: /Delete task/ })).not.toBeInTheDocument()
+  })
+
+  it('calls onDelete with task id on delete button click', async () => {
+    const user = userEvent.setup()
+    const onDelete = vi.fn().mockResolvedValue(undefined)
+    const task: Task = { id: 5, text: 'Clean house', completed: false, createdAt: '2026-03-12T10:00:00.000Z' }
+
+    render(<TaskItem task={task} onDelete={onDelete} />)
+
+    await user.click(screen.getByRole('button', { name: 'Delete task: Clean house' }))
+
+    expect(onDelete).toHaveBeenCalledWith(5)
+  })
+
+  it('disables delete button during delete', async () => {
+    let resolveDelete: () => void
+    const onDelete = vi.fn().mockImplementation(
+      () => new Promise<void>((resolve) => { resolveDelete = resolve })
+    )
+    const task: Task = { id: 1, text: 'Buy milk', completed: false, createdAt: '2026-03-12T10:00:00.000Z' }
+
+    render(<TaskItem task={task} onDelete={onDelete} />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Delete task: Buy milk' }))
+
+    expect(screen.getByRole('button', { name: 'Delete task: Buy milk' })).toBeDisabled()
+
+    resolveDelete!()
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Delete task: Buy milk' })).not.toBeDisabled()
+    })
+  })
 })
