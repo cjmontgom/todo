@@ -45,8 +45,8 @@ development_status:
   1-2-view-tasks-on-app-load: review
   epic-1-retrospective: optional
 
-  epic-2: backlog
-  2-1-create-a-new-task: backlog
+  epic-2: in-progress
+  2-1-create-a-new-task: review
   epic-2-retrospective: optional
 
   epic-3: backlog
