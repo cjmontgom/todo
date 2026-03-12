@@ -16,4 +16,18 @@ export async function getAllTasks() {
   }))
 }
 
+export async function createTask(text: string) {
+  const result = await pool.query(
+    'INSERT INTO tasks (text) VALUES ($1) RETURNING id, text, completed, created_at',
+    [text]
+  )
+  const row = result.rows[0]
+  return {
+    id: row.id,
+    text: row.text,
+    completed: row.completed,
+    createdAt: row.created_at,
+  }
+}
+
 export default pool
