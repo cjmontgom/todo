@@ -93,6 +93,61 @@ describe('App', () => {
     expect(api.createTask).toHaveBeenCalledWith('New task')
   })
 
+  it('toggles task completion and updates visual state', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.toggleTask).mockResolvedValue({
+      id: 1,
+      text: 'Buy groceries',
+      completed: true,
+      createdAt: '2026-03-12T10:00:00.000Z',
+    })
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    const checkboxes = screen.getAllByRole('checkbox')
+    const activeCheckbox = checkboxes.find(
+      (cb) => cb.getAttribute('aria-label') === 'Mark Buy groceries as complete'
+    )!
+    await user.click(activeCheckbox)
+
+    await waitFor(() => {
+      expect(api.toggleTask).toHaveBeenCalledWith(1, true)
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toHaveClass('line-through')
+    })
+  })
+
+  it('keeps task unchanged when toggle fails', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.toggleTask).mockRejectedValue(new Error('Network error'))
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    const checkboxes = screen.getAllByRole('checkbox')
+    const activeCheckbox = checkboxes.find(
+      (cb) => cb.getAttribute('aria-label') === 'Mark Buy groceries as complete'
+    )!
+    await user.click(activeCheckbox)
+
+    await waitFor(() => {
+      expect(api.toggleTask).toHaveBeenCalledWith(1, true)
+    })
+
+    expect(screen.getByText('Buy groceries')).not.toHaveClass('line-through')
+  })
+
   it('shows inline error when task creation fails', async () => {
     const user = userEvent.setup()
     vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
