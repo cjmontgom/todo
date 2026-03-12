@@ -42,7 +42,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   epic-1: in-progress
   1-1-project-setup: review
-  1-2-view-tasks-on-app-load: backlog
+  1-2-view-tasks-on-app-load: review
   epic-1-retrospective: optional
 
   epic-2: backlog
