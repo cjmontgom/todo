@@ -3,3 +3,7 @@ node_modules/
 dist/
 .DS_Store
 docs/ai-integration-log.md
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

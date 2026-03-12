@@ -87,4 +87,13 @@ cd backend && npm test
 
 # Frontend tests
 cd frontend && npx vitest run
+
+# E2E tests (Playwright) — from the project root
+npm run test:e2e
+
+# E2E with headed browser
+npm run test:e2e:headed
+
+# E2E with Playwright UI
+npm run test:e2e:ui
 ```
