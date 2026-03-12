@@ -45,4 +45,12 @@ export async function toggleTask(id: number, completed: boolean) {
   }
 }
 
+export async function deleteTask(id: number) {
+  const result = await pool.query(
+    'DELETE FROM tasks WHERE id = $1 RETURNING id',
+    [id]
+  )
+  return result.rows.length > 0
+}
+
 export default pool

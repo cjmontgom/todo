@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { getAllTasks, createTask, toggleTask } from './db.js'
+import { getAllTasks, createTask, toggleTask, deleteTask } from './db.js'
 
 export async function taskRoutes(server: FastifyInstance) {
   server.get('/api/tasks', async (_request, reply) => {
@@ -39,6 +39,32 @@ export async function taskRoutes(server: FastifyInstance) {
         return reply.status(404).send({ error: 'Task not found' })
       }
       return reply.send(task)
+    } catch {
+      return reply.status(500).send({ error: 'Something went wrong' })
+    }
+  })
+
+  server.delete<{ Params: { id: string } }>('/api/tasks/:id', {
+    schema: {
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string' },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const id = Number(request.params.id)
+    if (Number.isNaN(id)) {
+      return reply.status(400).send({ error: 'Invalid task ID' })
+    }
+    try {
+      const deleted = await deleteTask(id)
+      if (!deleted) {
+        return reply.status(404).send({ error: 'Task not found' })
+      }
+      return reply.status(204).send()
     } catch {
       return reply.status(500).send({ error: 'Something went wrong' })
     }

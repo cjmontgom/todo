@@ -4,12 +4,14 @@ import assert from 'node:assert/strict'
 const getAllTasksMock = mock.fn<() => Promise<unknown>>()
 const createTaskMock = mock.fn<(text: string) => Promise<unknown>>()
 const toggleTaskMock = mock.fn<(id: number, completed: boolean) => Promise<unknown>>()
+const deleteTaskMock = mock.fn<(id: number) => Promise<unknown>>()
 
 mock.module('./db.js', {
   namedExports: {
     getAllTasks: getAllTasksMock,
     createTask: createTaskMock,
     toggleTask: toggleTaskMock,
+    deleteTask: deleteTaskMock,
   },
 })
 
@@ -233,6 +235,55 @@ describe('PATCH /api/tasks/:id', () => {
     })
 
     assert.equal(response.statusCode, 400)
+
+    await app.close()
+  })
+})
+
+describe('DELETE /api/tasks/:id', () => {
+  it('deletes a task and returns 204', async () => {
+    deleteTaskMock.mock.mockImplementation(() => Promise.resolve(true))
+
+    const app = await buildApp()
+    const response = await app.inject({
+      method: 'DELETE',
+      url: '/api/tasks/1',
+    })
+
+    assert.equal(response.statusCode, 204)
+    assert.equal(response.body, '')
+
+    await app.close()
+  })
+
+  it('returns 404 when task not found', async () => {
+    deleteTaskMock.mock.mockImplementation(() => Promise.resolve(false))
+
+    const app = await buildApp()
+    const response = await app.inject({
+      method: 'DELETE',
+      url: '/api/tasks/999',
+    })
+
+    assert.equal(response.statusCode, 404)
+    const body = JSON.parse(response.body)
+    assert.equal(body.error, 'Task not found')
+
+    await app.close()
+  })
+
+  it('returns 500 on database error', async () => {
+    deleteTaskMock.mock.mockImplementation(() => Promise.reject(new Error('DB delete failed')))
+
+    const app = await buildApp()
+    const response = await app.inject({
+      method: 'DELETE',
+      url: '/api/tasks/1',
+    })
+
+    assert.equal(response.statusCode, 500)
+    const body = JSON.parse(response.body)
+    assert.equal(body.error, 'Something went wrong')
 
     await app.close()
   })
