@@ -1,25 +1,43 @@
 import { useEffect, useState } from 'react'
 import { fetchTasks } from './api'
 import { Task } from './types'
+import { AppShell } from './components/AppShell'
+import { AppHeader } from './components/AppHeader'
+import { TaskList } from './components/TaskList'
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadTasks = () => {
+    setError(null)
+    setLoading(true)
     fetchTasks()
-      .then(setTasks)
-      .catch((err) => setError(err.message))
+      .then((data) => {
+        setTasks(data)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+        setLoading(false)
+      })
+  }
+
+  useEffect(() => {
+    loadTasks()
   }, [])
 
   return (
-    <div className="min-h-screen bg-background text-text-primary font-sans">
-      <h1 className="text-2xl font-semibold p-8">Todo</h1>
-      {error && <p className="text-error-text px-8">Error: {error}</p>}
-      <p className="px-8 text-text-secondary">
-        {tasks.length === 0 ? 'No tasks yet.' : `${tasks.length} task(s) loaded.`}
-      </p>
-    </div>
+    <AppShell>
+      <AppHeader />
+      <TaskList
+        tasks={tasks}
+        loading={loading}
+        error={error}
+        onRetry={loadTasks}
+      />
+    </AppShell>
   )
 }
 
