@@ -18,6 +18,8 @@ export function TaskInput({ onCreateTask, createError, onClearError }: TaskInput
     try {
       await onCreateTask(trimmed)
       setText('')
+    } catch {
+      // Error display handled by parent via createError prop
     } finally {
       setSubmitting(false)
     }

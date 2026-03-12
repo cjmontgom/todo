@@ -68,4 +68,46 @@ describe('App', () => {
       expect(screen.getByText('Buy groceries')).toBeInTheDocument()
     })
   })
+
+  it('creates a new task and displays it in the list', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue([])
+    vi.mocked(api.createTask).mockResolvedValue({
+      id: 10,
+      text: 'New task',
+      completed: false,
+      createdAt: '2026-03-12T14:00:00.000Z',
+    })
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Add a task...')).toBeInTheDocument()
+    })
+
+    await user.type(screen.getByPlaceholderText('Add a task...'), 'New task{enter}')
+
+    await waitFor(() => {
+      expect(screen.getByText('New task')).toBeInTheDocument()
+    })
+    expect(api.createTask).toHaveBeenCalledWith('New task')
+  })
+
+  it('shows inline error when task creation fails', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.createTask).mockRejectedValue(new Error('Server error'))
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    await user.type(screen.getByPlaceholderText('Add a task...'), 'Failing task{enter}')
+
+    await waitFor(() => {
+      expect(screen.getByText('Something went wrong. Give it another try.')).toBeInTheDocument()
+    })
+  })
 })
