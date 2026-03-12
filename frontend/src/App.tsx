@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchTasks, createTask } from './api'
+import { fetchTasks, createTask, toggleTask } from './api'
 import { Task } from './types'
 import { AppShell } from './components/AppShell'
 import { AppHeader } from './components/AppHeader'
@@ -37,6 +37,17 @@ function App() {
     }
   }
 
+  const handleToggleTask = async (id: number, completed: boolean) => {
+    try {
+      const updatedTask = await toggleTask(id, completed)
+      setTasks((prev) =>
+        prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+      )
+    } catch {
+      // Silent failure — Toast error notification deferred to Story 5.1
+    }
+  }
+
   useEffect(() => {
     loadTasks()
   }, [])
@@ -54,6 +65,7 @@ function App() {
         loading={loading}
         error={error}
         onRetry={loadTasks}
+        onToggle={handleToggleTask}
       />
     </AppShell>
   )
