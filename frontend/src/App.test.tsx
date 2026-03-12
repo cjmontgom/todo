@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import App from './App'
 import * as api from './api'
-import { Task } from './types'
+import type { Task } from './types'
 
 vi.mock('./api')
 

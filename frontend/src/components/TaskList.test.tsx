@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { TaskList } from './TaskList'
-import { Task } from '../types'
+import type { Task } from '../types'
 
 const mockTasks: Task[] = [
   { id: 1, text: 'Active task', completed: false, createdAt: '2026-03-12T10:00:00.000Z' },

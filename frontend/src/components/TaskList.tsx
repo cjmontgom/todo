@@ -1,4 +1,4 @@
-import { Task } from '../types'
+import type { Task } from '../types'
 import { EmptyState } from './EmptyState'
 import { ErrorState } from './ErrorState'
 import { LoadingState } from './LoadingState'

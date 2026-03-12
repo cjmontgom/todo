@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import { TaskItem } from './TaskItem'
-import { Task } from '../types'
+import type { Task } from '../types'
 
 describe('TaskItem', () => {
   it('renders active task with full opacity text', () => {

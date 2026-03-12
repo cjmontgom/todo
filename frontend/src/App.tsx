@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchTasks, createTask, toggleTask } from './api'
-import { Task } from './types'
+import type { Task } from './types'
 import { AppShell } from './components/AppShell'
 import { AppHeader } from './components/AppHeader'
 import { TaskInput } from './components/TaskInput'
