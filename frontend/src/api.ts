@@ -10,6 +10,18 @@ export async function fetchTasks(): Promise<Task[]> {
   return response.json()
 }
 
+export async function toggleTask(id: number, completed: boolean): Promise<Task> {
+  const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed }),
+  })
+  if (!response.ok) {
+    throw new Error('Failed to update task')
+  }
+  return response.json()
+}
+
 export async function createTask(text: string): Promise<Task> {
   const response = await fetch(`${API_URL}/api/tasks`, {
     method: 'POST',
