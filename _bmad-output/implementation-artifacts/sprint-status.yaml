@@ -50,7 +50,7 @@ development_status:
   epic-2-retrospective: optional
 
   epic-3: in-progress
-  3-1-toggle-task-completion: ready-for-dev
+  3-1-toggle-task-completion: review
   epic-3-retrospective: optional
 
   epic-4: backlog

@@ -1,6 +1,6 @@
 # Story 3.1: Toggle Task Completion
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -28,49 +28,49 @@ So that I can track what I've done.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add `toggleTask()` to `backend/src/db.ts` (AC: #1, #2)
-  - [ ] Add function that UPDATEs `completed` for a given `id` and returns the updated task
-  - [ ] Use parameterised query: `UPDATE tasks SET completed = $1 WHERE id = $2 RETURNING id, text, completed, created_at`
-  - [ ] Map `created_at` → `createdAt` in the return (same pattern as `getAllTasks` and `createTask`)
-  - [ ] Return full task object `{ id, text, completed, createdAt }` or `null` if id not found
-- [ ] Task 2: Add `PATCH /api/tasks/:id` route to `backend/src/routes.ts` (AC: #1, #2, #4)
-  - [ ] Add route handler with Fastify JSON schema validation on request body (`{ completed: boolean }`) and params (`{ id: string }`)
-  - [ ] Both schemas must include `type` property (Fastify v5 requirement)
-  - [ ] Parse `id` from params as integer
-  - [ ] On success return `200` with the updated task object
-  - [ ] Return `404` with `{ "error": "Task not found" }` if no row matched
-  - [ ] Catch DB errors and return `500` with `{ "error": "Something went wrong" }`
-- [ ] Task 3: Add `toggleTask()` to `frontend/src/api.ts` (AC: #1, #2)
-  - [ ] PATCH to `${API_URL}/api/tasks/${id}` with `Content-Type: application/json` body `{ completed }`
-  - [ ] Return the updated `Task` from the response
-  - [ ] Throw on non-ok response
-- [ ] Task 4: Make Checkbox interactive (AC: #1, #2, #4)
-  - [ ] Modify `frontend/src/components/Checkbox.tsx`
-  - [ ] Change outer `<div>` to `<button>` for native keyboard and click support
-  - [ ] Add optional `onChange` callback prop (when absent, checkbox remains display-only for backwards compatibility)
-  - [ ] Add optional `disabled` prop to prevent clicks during in-flight requests
-  - [ ] Ensure Space key and Enter key both trigger toggle (native `<button>` behaviour)
-  - [ ] Update `aria-label` to reflect current state: "Mark [task text] as complete" / "Mark [task text] as incomplete"
-  - [ ] Add `cursor-pointer` when interactive, `cursor-not-allowed` + `opacity-50` when disabled
-  - [ ] Preserve all existing visual styling (circle, coral fill, checkmark)
-- [ ] Task 5: Update TaskItem to support toggle (AC: #1, #2, #4)
-  - [ ] Add `onToggle?: (id: number, completed: boolean) => Promise<void>` prop to TaskItem
-  - [ ] Add local `toggling` state to track in-flight toggle requests
-  - [ ] On checkbox click: set `toggling = true`, call `onToggle(task.id, !task.completed)`, set `toggling = false` on completion
-  - [ ] Pass `onChange`, `disabled={toggling}`, and correct `label` to Checkbox
-  - [ ] While toggling, apply subtle `opacity-70` to the entire task row to indicate in-flight state
-- [ ] Task 6: Wire toggle through TaskList to App.tsx (AC: #1, #2, #3, #4)
-  - [ ] Add `onToggle?: (id: number, completed: boolean) => Promise<void>` prop to TaskList
-  - [ ] Pass `onToggle` through to each TaskItem
-  - [ ] In App.tsx, add `handleToggleTask(id: number, completed: boolean)` function
-  - [ ] Call `toggleTask(id, completed)` from api.ts
-  - [ ] On success: update the task's `completed` field in local `tasks` state using the returned task data
-  - [ ] On failure: silently fail (no UI change since no optimistic UI was applied) — Toast error notification deferred to Story 5.1
-  - [ ] TaskList's existing sort logic handles re-ordering automatically
-- [ ] Task 7: Add tests (AC: #1, #2, #3, #4)
-  - [ ] Add `PATCH /api/tasks/:id` backend tests in `backend/src/routes.test.ts`: success (200), not found (404), DB error (500), invalid body (400)
-  - [ ] Update `frontend/src/components/TaskItem.test.tsx`: test toggle callback fires on checkbox click, disabled state during toggle
-  - [ ] Update `frontend/src/App.test.tsx`: test toggle flow (task visual state changes after toggle), test toggle with mixed completion states
+- [x] Task 1: Add `toggleTask()` to `backend/src/db.ts` (AC: #1, #2)
+  - [x] Add function that UPDATEs `completed` for a given `id` and returns the updated task
+  - [x] Use parameterised query: `UPDATE tasks SET completed = $1 WHERE id = $2 RETURNING id, text, completed, created_at`
+  - [x] Map `created_at` → `createdAt` in the return (same pattern as `getAllTasks` and `createTask`)
+  - [x] Return full task object `{ id, text, completed, createdAt }` or `null` if id not found
+- [x] Task 2: Add `PATCH /api/tasks/:id` route to `backend/src/routes.ts` (AC: #1, #2, #4)
+  - [x] Add route handler with Fastify JSON schema validation on request body (`{ completed: boolean }`) and params (`{ id: string }`)
+  - [x] Both schemas must include `type` property (Fastify v5 requirement)
+  - [x] Parse `id` from params as integer
+  - [x] On success return `200` with the updated task object
+  - [x] Return `404` with `{ "error": "Task not found" }` if no row matched
+  - [x] Catch DB errors and return `500` with `{ "error": "Something went wrong" }`
+- [x] Task 3: Add `toggleTask()` to `frontend/src/api.ts` (AC: #1, #2)
+  - [x] PATCH to `${API_URL}/api/tasks/${id}` with `Content-Type: application/json` body `{ completed }`
+  - [x] Return the updated `Task` from the response
+  - [x] Throw on non-ok response
+- [x] Task 4: Make Checkbox interactive (AC: #1, #2, #4)
+  - [x] Modify `frontend/src/components/Checkbox.tsx`
+  - [x] Change outer `<div>` to `<button>` for native keyboard and click support
+  - [x] Add optional `onChange` callback prop (when absent, checkbox remains display-only for backwards compatibility)
+  - [x] Add optional `disabled` prop to prevent clicks during in-flight requests
+  - [x] Ensure Space key and Enter key both trigger toggle (native `<button>` behaviour)
+  - [x] Update `aria-label` to reflect current state: "Mark [task text] as complete" / "Mark [task text] as incomplete"
+  - [x] Add `cursor-pointer` when interactive, `cursor-not-allowed` + `opacity-50` when disabled
+  - [x] Preserve all existing visual styling (circle, coral fill, checkmark)
+- [x] Task 5: Update TaskItem to support toggle (AC: #1, #2, #4)
+  - [x] Add `onToggle?: (id: number, completed: boolean) => Promise<void>` prop to TaskItem
+  - [x] Add local `toggling` state to track in-flight toggle requests
+  - [x] On checkbox click: set `toggling = true`, call `onToggle(task.id, !task.completed)`, set `toggling = false` on completion
+  - [x] Pass `onChange`, `disabled={toggling}`, and correct `label` to Checkbox
+  - [x] While toggling, apply subtle `opacity-70` to the entire task row to indicate in-flight state
+- [x] Task 6: Wire toggle through TaskList to App.tsx (AC: #1, #2, #3, #4)
+  - [x] Add `onToggle?: (id: number, completed: boolean) => Promise<void>` prop to TaskList
+  - [x] Pass `onToggle` through to each TaskItem
+  - [x] In App.tsx, add `handleToggleTask(id: number, completed: boolean)` function
+  - [x] Call `toggleTask(id, completed)` from api.ts
+  - [x] On success: update the task's `completed` field in local `tasks` state using the returned task data
+  - [x] On failure: silently fail (no UI change since no optimistic UI was applied) — Toast error notification deferred to Story 5.1
+  - [x] TaskList's existing sort logic handles re-ordering automatically
+- [x] Task 7: Add tests (AC: #1, #2, #3, #4)
+  - [x] Add `PATCH /api/tasks/:id` backend tests in `backend/src/routes.test.ts`: success (200), not found (404), DB error (500), invalid body (400)
+  - [x] Update `frontend/src/components/TaskItem.test.tsx`: test toggle callback fires on checkbox click, disabled state during toggle
+  - [x] Update `frontend/src/App.test.tsx`: test toggle flow (task visual state changes after toggle), test toggle with mixed completion states
 
 ## Dev Notes
 
@@ -360,10 +360,39 @@ backend/src/
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude claude-4.6-opus (via Cursor)
 
 ### Debug Log References
 
+- No issues encountered during implementation.
+
 ### Completion Notes List
 
+- Added `toggleTask()` to `backend/src/db.ts` with UPDATE RETURNING and camelCase mapping, returns null if id not found
+- Added `PATCH /api/tasks/:id` route with Fastify JSON schema validation on params + body, 200/400/404/500 responses
+- Added `toggleTask()` to `frontend/src/api.ts` following established PATCH fetch pattern
+- Refactored Checkbox from `<div>` to `<button>` when `onChange` provided, preserving display-only mode for backwards compatibility
+- Updated TaskItem with `onToggle` prop, local `toggling` state, opacity-70 in-flight indicator, dynamic aria-label (complete/incomplete)
+- Wired `onToggle` through TaskList to App.tsx with `handleToggleTask` — silent failure on error (no optimistic UI)
+- 4 backend PATCH tests: 200 success, 404 not found, 500 DB error, 400 invalid body
+- 6 TaskItem tests: active/completed rendering, aria-labels, toggle callback, disabled state during toggle
+- 2 App integration tests: toggle updates visual state, toggle failure keeps task unchanged
+- All 41 tests pass (12 backend + 29 frontend), no regressions
+
+### Change Log
+
+- 2026-03-12: Story 3.1 implemented — Task completion toggle with PATCH /api/tasks/:id endpoint, interactive Checkbox, and 10 new tests
+
 ### File List
+
+**Modified:**
+- `backend/src/db.ts` — Added `toggleTask()` function with UPDATE query and camelCase mapping
+- `backend/src/routes.ts` — Added PATCH /api/tasks/:id route with JSON schema validation
+- `backend/src/routes.test.ts` — Added 4 PATCH /api/tasks/:id tests
+- `frontend/src/api.ts` — Added `toggleTask()` function
+- `frontend/src/App.tsx` — Added `handleToggleTask` callback, passed `onToggle` to TaskList
+- `frontend/src/App.test.tsx` — Added 2 toggle integration tests
+- `frontend/src/components/Checkbox.tsx` — Refactored to support interactive mode (button) with onChange/disabled props
+- `frontend/src/components/TaskItem.tsx` — Added onToggle prop, toggling state, dynamic aria-label
+- `frontend/src/components/TaskItem.test.tsx` — Updated with toggle interaction tests (6 total)
+- `frontend/src/components/TaskList.tsx` — Added onToggle prop, passes to TaskItem
