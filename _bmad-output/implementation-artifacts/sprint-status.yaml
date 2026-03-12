@@ -64,3 +64,15 @@ development_status:
   epic-6: backlog
   6-1-keyboard-navigation-screen-reader-support: backlog
   epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-playwright-e2e-test-suite: backlog
+  epic-7-retrospective: optional
+
+  epic-8: backlog
+  8-1-qa-reports: backlog
+  epic-8-retrospective: optional
+
+  epic-9: backlog
+  9-1-docker-setup: backlog
+  epic-9-retrospective: optional

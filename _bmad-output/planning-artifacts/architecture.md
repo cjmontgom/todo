@@ -162,6 +162,7 @@ No authentication for V1. The only security-relevant decision is CORS:
 | POST | `/api/tasks` | Create a task |
 | PATCH | `/api/tasks/:id` | Update task (toggle completion) |
 | DELETE | `/api/tasks/:id` | Delete a task |
+| GET | `/api/health` | Health check (returns 200 with `{ status: "ok" }`) |
 
 ### Frontend Architecture
 
@@ -187,6 +188,7 @@ No authentication for V1. The only security-relevant decision is CORS:
 | Backend hosting | Railway (free tier) | Easy Fastify deployment, managed PostgreSQL included. |
 | Environment config | `.env` files | Database connection string, API port, frontend API URL. |
 | CI/CD | Deferred to post-V1 | Manual deployment is acceptable for a training deliverable. |
+| Containerisation | Docker + Docker Compose | Multi-stage Dockerfiles for frontend and backend. PostgreSQL via official image. Application starts with `docker-compose up`. |
 | Monitoring/logging | Console logging only | No production monitoring for V1. |
 
 ## Implementation Patterns & Consistency Rules

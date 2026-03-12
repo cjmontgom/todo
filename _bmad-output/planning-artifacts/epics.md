@@ -127,6 +127,18 @@ The app handles failures gracefully — inline errors, toasts, full-page error s
 Keyboard navigation, screen reader support, touch targets, and responsive refinements.
 **FRs covered:** FR15, FR16, FR17
 
+### Epic 7: End-to-End Tests
+Automated browser tests validating all core user journeys work correctly from the user's perspective.
+**Training deliverable:** Minimum 5 passing Playwright tests
+
+### Epic 8: Quality Assurance & Reports
+Measure and document application quality across test coverage, accessibility, and security.
+**Training deliverable:** 70% coverage, zero critical WCAG violations, security review
+
+### Epic 9: Containerisation
+Dockerise the application so it runs via `docker-compose up`.
+**Training deliverable:** Dockerfiles, docker-compose.yml, health checks
+
 ## Epic 1: Project Foundation & Core Task Display
 
 Users can open the app and see their task list (or a welcoming empty state). Establishes the full-stack skeleton end-to-end.
@@ -344,3 +356,91 @@ So that the app is accessible to me.
 **Given** all interactive elements at any viewport size
 **When** rendered
 **Then** touch/click targets are at least 44x44px with sufficient spacing between them
+
+## Epic 7: End-to-End Tests
+
+Automated browser tests validating all core user journeys work correctly from the user's perspective.
+
+### Story 7.1: Playwright E2E Test Suite
+
+As a developer,
+I want automated end-to-end tests covering all core user journeys,
+So that I can verify the full application works correctly in a real browser.
+
+**Acceptance Criteria:**
+
+**Given** the application is running (frontend + backend + database)
+**When** the Playwright test suite is executed
+**Then** a minimum of 5 tests pass covering: create a task, complete a task, delete a task, empty state display, and error handling
+
+**Given** a new user opens the app with no tasks
+**When** the page loads
+**Then** the empty state is displayed
+
+**Given** the user types a task and submits
+**When** the task is created
+**Then** it appears in the task list
+
+**Given** an active task exists
+**When** the user clicks its checkbox
+**Then** the task moves to the completed section with visual changes
+
+**Given** a task exists
+**When** the user clicks delete
+**Then** the task is removed from the list
+
+**Given** the backend is unavailable
+**When** the app attempts to load tasks
+**Then** the error state is displayed with a retry button
+
+## Epic 8: Quality Assurance & Reports
+
+Measure and document application quality across test coverage, accessibility, and security.
+
+### Story 8.1: QA Reports
+
+As a developer delivering a training course project,
+I want documented quality reports,
+So that I can demonstrate the application meets quality standards.
+
+**Acceptance Criteria:**
+
+**Given** the test suites exist
+**When** coverage analysis is run
+**Then** meaningful code coverage is at minimum 70%
+
+**Given** the application is running
+**When** an accessibility audit is performed (Lighthouse or axe-core)
+**Then** zero critical WCAG AA violations are found
+
+**Given** the application codebase
+**When** a security review is performed
+**Then** common vulnerabilities (XSS, injection) are documented with findings and remediations
+
+## Epic 9: Containerisation
+
+Dockerise the application so it runs via `docker-compose up`.
+
+### Story 9.1: Docker Setup
+
+As a developer deploying the application,
+I want Docker containers for frontend and backend,
+So that the application can be started with a single `docker-compose up` command.
+
+**Acceptance Criteria:**
+
+**Given** the repository is cloned
+**When** `docker-compose up` is run
+**Then** the frontend, backend, and database start and the application is usable in the browser
+
+**Given** the Dockerfiles
+**When** inspected
+**Then** they use multi-stage builds, run as non-root users, and include health checks
+
+**Given** the containers are running
+**When** `docker-compose logs` is run
+**Then** health status and application logs are accessible
+
+**Given** the docker-compose configuration
+**When** environment variables are reviewed
+**Then** dev/test environments are supported through environment variables or compose profiles
