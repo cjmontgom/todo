@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>todo — Design Directions</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text-primary: #2D2D2D;
+    --text-secondary: #8B8B8B;
+    --border: #E8E6E3;
+    --completed-text: #B0AEA9;
+    --accent: #E8927C;
+    --accent-hover: #D4805A;
+    --hover-bg: #F3EEEB;
+    --success: #D4E4DA;
+    --error-bg: #F0D4CE;
+    --error-text: #C4705A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F0EFED;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .page-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 24px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+  .page-header p { font-size: 14px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
+  .directions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 900px) {
+    .directions-grid { grid-template-columns: 1fr; max-width: 500px; }
+  }
+
+  .direction-card {
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  .direction-label {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .direction-label h2 { font-size: 15px; font-weight: 600; }
+  .direction-label span { font-size: 12px; color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .direction-desc {
+    padding: 12px 20px;
+    background: #F7F6F4;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .phone-frame {
+    background: var(--bg);
+    margin: 20px;
+    border-radius: 24px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* === DIRECTION A: Clean Ruled === */
+  .dir-a .app-header {
+    padding: 20px 16px 12px;
+    text-align: left;
+  }
+  .dir-a .app-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .dir-a .input-area {
+    padding: 0 16px 16px;
+    display: flex;
+    gap: 8px;
+  }
+  .dir-a .input-area input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text-secondary);
+    outline: none;
+  }
+  .dir-a .input-area button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .dir-a .task-list { flex: 1; }
+  .dir-a .task-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .dir-a .task-item:hover { background: var(--hover-bg); }
+  .dir-a .checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dir-a .checkbox.checked {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .dir-a .checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .dir-a .task-text { flex: 1; font-size: 16px; }
+  .dir-a .task-text.completed {
+    text-decoration: line-through;
+    color: var(--completed-text);
+  }
+  .dir-a .task-meta { font-size: 12px; color: var(--text-secondary); }
+  .dir-a .delete-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .dir-a .task-item:hover .delete-btn { opacity: 1; }
+  .dir-a .delete-btn:hover { background: var(--error-bg); color: var(--error-text); }
+
+  /* === DIRECTION B: Card-based === */
+  .dir-b .app-header {
+    padding: 20px 16px 4px;
+    text-align: center;
+  }
+  .dir-b .app-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .dir-b .app-header .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .dir-b .input-area {
+    padding: 12px 16px 8px;
+  }
+  .dir-b .input-area .input-wrapper {
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .dir-b .input-area input {
+    flex: 1;
+    padding: 12px 14px;
+    border: none;
+    font-size: 16px;
+    font-family: inherit;
+    background: transparent;
+    color: var(--text-secondary);
+    outline: none;
+  }
+  .dir-b .input-area button {
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .dir-b .task-list {
+    flex: 1;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dir-b .task-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 14px;
+    background: var(--surface);
+    border-radius: 10px;
+    gap: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .dir-b .checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dir-b .checkbox.checked {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .dir-b .checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .dir-b .task-content { flex: 1; }
+  .dir-b .task-text { font-size: 16px; }
+  .dir-b .task-text.completed {
+    text-decoration: line-through;
+    color: var(--completed-text);
+  }
+  .dir-b .task-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .dir-b .delete-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+  }
+  .dir-b .task-item:hover .delete-btn { opacity: 1; }
+  .dir-b .delete-btn:hover { background: var(--error-bg); color: var(--error-text); }
+
+  /* === DIRECTION C: Minimal Flat === */
+  .dir-c .app-header {
+    padding: 24px 16px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--text-primary);
+    margin: 0 16px;
+  }
+  .dir-c .app-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: lowercase;
+    letter-spacing: -0.3px;
+  }
+
+  .dir-c .input-area {
+    padding: 16px 16px 0;
+    margin: 0 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dir-c .input-area input {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    font-size: 16px;
+    font-family: inherit;
+    background: transparent;
+    color: var(--text-secondary);
+    outline: none;
+  }
+
+  .dir-c .task-list {
+    flex: 1;
+    margin: 0 16px;
+  }
+  .dir-c .task-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .dir-c .checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 0;
+    border: 1.5px solid var(--text-secondary);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dir-c .checkbox.checked {
+    border-color: var(--completed-text);
+    background: transparent;
+  }
+  .dir-c .checkbox.checked::after {
+    content: '✓';
+    color: var(--completed-text);
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .dir-c .task-text {
+    flex: 1;
+    font-size: 16px;
+  }
+  .dir-c .task-text.completed {
+    text-decoration: line-through;
+    color: var(--completed-text);
+  }
+  .dir-c .delete-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--completed-text);
+    cursor: pointer;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .dir-c .task-item:hover .delete-btn { opacity: 1; }
+
+  /* === DIRECTION D: Separated Sections === */
+  .dir-d .app-header {
+    padding: 20px 16px 12px;
+    text-align: left;
+  }
+  .dir-d .app-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .dir-d .input-area {
+    padding: 0 16px 16px;
+    display: flex;
+    gap: 8px;
+  }
+  .dir-d .input-area input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text-secondary);
+    outline: none;
+  }
+  .dir-d .input-area button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .dir-d .section-label {
+    padding: 8px 16px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+  }
+
+  .dir-d .task-list { flex: 1; }
+  .dir-d .task-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .dir-d .task-item:hover { background: var(--hover-bg); }
+  .dir-d .checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dir-d .checkbox.checked {
+    border-color: var(--success);
+    background: var(--success);
+  }
+  .dir-d .checkbox.checked::after {
+    content: '✓';
+    color: #5A8B6A;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .dir-d .task-text { flex: 1; font-size: 16px; }
+  .dir-d .task-text.completed {
+    text-decoration: line-through;
+    color: var(--completed-text);
+  }
+  .dir-d .delete-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .dir-d .task-item:hover .delete-btn { opacity: 1; }
+  .dir-d .delete-btn:hover { background: var(--error-bg); color: var(--error-text); }
+
+  .dir-d .completed-section {
+    margin-top: 4px;
+    border-top: 1px solid var(--border);
+  }
+  .dir-d .completed-section .task-item { opacity: 0.7; }
+
+  /* Key decisions section */
+  .decisions-section {
+    max-width: 1200px;
+    margin: 0 auto 48px;
+    padding: 0 32px;
+  }
+  .decisions-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+  }
+  .decision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .decision-grid { grid-template-columns: 1fr; }
+  }
+  .decision-card {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .decision-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
+  .decision-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .decision-card .options { margin-top: 10px; }
+  .decision-card .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  .decision-card .option-label { font-weight: 500; min-width: 24px; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>todo — Design Directions</h1>
+  <p>Four approaches exploring the key structural decisions. Same colour palette, typography, and spacing — different layout and interaction patterns. Hover over tasks to see delete behaviour.</p>
+</div>
+
+<div class="directions-grid">
+
+  <!-- DIRECTION A: Clean Ruled -->
+  <div class="direction-card">
+    <div class="direction-label">
+      <h2>A — Clean Ruled</h2>
+      <span>Classic list</span>
+    </div>
+    <div class="direction-desc">
+      Ruled-line list with circle checkboxes. Input at top with coral add button. Delete reveals on hover. All tasks in one flat list — completed tasks stay inline with strikethrough styling. The purest notebook feel.
+    </div>
+    <div class="phone-frame dir-a">
+      <div class="app-header"><h3>todo</h3></div>
+      <div class="input-area">
+        <input type="text" placeholder="Add a task..." readonly>
+        <button>+</button>
+      </div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Book dentist appointment</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Reply to Sarah's email</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox checked"></div>
+          <span class="task-text completed">Buy groceries for dinner</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Research weekend trains</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox checked"></div>
+          <span class="task-text completed">Water the plants</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Call the landlord about the boiler</span>
+          <button class="delete-btn">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTION B: Card-based -->
+  <div class="direction-card">
+    <div class="direction-label">
+      <h2>B — Soft Cards</h2>
+      <span>Elevated items</span>
+    </div>
+    <div class="direction-desc">
+      Each task is a discrete card with rounded corners and subtle shadow. Inline input with text "Add" button. Rounded square checkboxes. Timestamps visible below task text. More spacious, more modern, slightly more visual weight.
+    </div>
+    <div class="phone-frame dir-b">
+      <div class="app-header">
+        <h3>todo</h3>
+        <div class="subtitle">6 tasks · 2 done</div>
+      </div>
+      <div class="input-area">
+        <div class="input-wrapper">
+          <input type="text" placeholder="What needs doing?" readonly>
+          <button>Add</button>
+        </div>
+      </div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <div class="task-content">
+            <span class="task-text">Book dentist appointment</span>
+            <div class="task-meta">Added today</div>
+          </div>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <div class="task-content">
+            <span class="task-text">Reply to Sarah's email</span>
+            <div class="task-meta">Added today</div>
+          </div>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox checked"></div>
+          <div class="task-content">
+            <span class="task-text completed">Buy groceries for dinner</span>
+            <div class="task-meta">Added yesterday</div>
+          </div>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <div class="task-content">
+            <span class="task-text">Research weekend trains</span>
+            <div class="task-meta">Added today</div>
+          </div>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox checked"></div>
+          <div class="task-content">
+            <span class="task-text completed">Water the plants</span>
+            <div class="task-meta">Added 2 days ago</div>
+          </div>
+          <button class="delete-btn">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTION C: Minimal Flat -->
+  <div class="direction-card">
+    <div class="direction-label">
+      <h2>C — Minimal Flat</h2>
+      <span>Maximum restraint</span>
+    </div>
+    <div class="direction-desc">
+      Stripped back to essentials. No add button — just type and hit Enter. Square checkboxes. No colour on completion — just line-through and fade. Bold header rule anchors the page. The most "notebook" of all directions. No timestamps visible.
+    </div>
+    <div class="phone-frame dir-c">
+      <div class="app-header"><h3>todo</h3></div>
+      <div class="input-area">
+        <input type="text" placeholder="new task..." readonly>
+      </div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Book dentist appointment</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Reply to Sarah's email</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox checked"></div>
+          <span class="task-text completed">Buy groceries for dinner</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Research weekend trains</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox checked"></div>
+          <span class="task-text completed">Water the plants</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Call the landlord about the boiler</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Sort out travel insurance</span>
+          <button class="delete-btn">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTION D: Separated Sections -->
+  <div class="direction-card">
+    <div class="direction-label">
+      <h2>D — Sectioned</h2>
+      <span>Active / Done split</span>
+    </div>
+    <div class="direction-desc">
+      Active and completed tasks visually separated with section labels. Completed section sits below, slightly dimmed. Sage green completion checkmarks instead of coral. Same ruled-line structure as A, but with the organisational clarity of two distinct zones.
+    </div>
+    <div class="phone-frame dir-d">
+      <div class="app-header"><h3>todo</h3></div>
+      <div class="input-area">
+        <input type="text" placeholder="Add a task..." readonly>
+        <button>+</button>
+      </div>
+      <div class="task-list">
+        <div class="section-label">Active</div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Book dentist appointment</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Reply to Sarah's email</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Research weekend trains</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="task-item">
+          <div class="checkbox"></div>
+          <span class="task-text">Call the landlord about the boiler</span>
+          <button class="delete-btn">✕</button>
+        </div>
+        <div class="completed-section">
+          <div class="section-label">Done</div>
+          <div class="task-item">
+            <div class="checkbox checked"></div>
+            <span class="task-text completed">Buy groceries for dinner</span>
+            <button class="delete-btn">✕</button>
+          </div>
+          <div class="task-item">
+            <div class="checkbox checked"></div>
+            <span class="task-text completed">Water the plants</span>
+            <button class="delete-btn">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="decisions-section">
+  <h2>Key Design Decisions</h2>
+  <div class="decision-grid">
+    <div class="decision-card">
+      <h3>Task Structure</h3>
+      <p>How each task item is visually contained.</p>
+      <div class="options">
+        <div class="option"><span class="option-label">A,D</span> Ruled lines — flat, notebook-like, tasks separated by borders</div>
+        <div class="option"><span class="option-label">B</span> Cards — each task elevated with rounded corners and shadow</div>
+        <div class="option"><span class="option-label">C</span> Minimal lines — same as ruled but with less visual weight</div>
+      </div>
+    </div>
+    <div class="decision-card">
+      <h3>Checkbox Style</h3>
+      <p>The affordance for completing a task.</p>
+      <div class="options">
+        <div class="option"><span class="option-label">A,D</span> Circle — soft, friendly, coral or sage fill on completion</div>
+        <div class="option"><span class="option-label">B</span> Rounded square — modern, slightly more structural</div>
+        <div class="option"><span class="option-label">C</span> Square — minimal, stark, monochrome completion</div>
+      </div>
+    </div>
+    <div class="decision-card">
+      <h3>Input Pattern</h3>
+      <p>How the user adds a new task.</p>
+      <div class="options">
+        <div class="option"><span class="option-label">A,D</span> Text input + coral "+" button — clear affordance for adding</div>
+        <div class="option"><span class="option-label">B</span> Inline input with text "Add" — softer, more integrated</div>
+        <div class="option"><span class="option-label">C</span> Bare input, Enter to submit — maximum minimalism, no button</div>
+      </div>
+    </div>
+    <div class="decision-card">
+      <h3>Completed Tasks</h3>
+      <p>Where completed tasks live in the list.</p>
+      <div class="options">
+        <div class="option"><span class="option-label">A,B,C</span> Inline — completed tasks stay where they are, visually faded</div>
+        <div class="option"><span class="option-label">D</span> Separated — completed tasks move to a "Done" section below</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
