@@ -190,6 +190,53 @@ describe('App', () => {
     expect(screen.getByText('Buy groceries')).toBeInTheDocument()
   })
 
+  it('shows toast when toggle fails', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.toggleTask).mockRejectedValue(new Error('Network error'))
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    const checkboxes = screen.getAllByRole('checkbox')
+    const activeCheckbox = checkboxes.find(
+      (cb) => cb.getAttribute('aria-label') === 'Mark Buy groceries as complete'
+    )!
+    await user.click(activeCheckbox)
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+    })
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      "Couldn't update the task. Give it another try."
+    )
+  })
+
+  it('shows toast when delete fails', async () => {
+    const user = userEvent.setup()
+    vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)
+    vi.mocked(api.deleteTask).mockRejectedValue(new Error('Network error'))
+
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Buy groceries')).toBeInTheDocument()
+    })
+
+    const deleteBtn = screen.getByRole('button', { name: 'Delete task: Buy groceries' })
+    await user.click(deleteBtn)
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+    })
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      "Couldn't delete the task. Give it another try."
+    )
+  })
+
   it('shows inline error when task creation fails', async () => {
     const user = userEvent.setup()
     vi.mocked(api.fetchTasks).mockResolvedValue(mockTasks)

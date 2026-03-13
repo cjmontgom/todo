@@ -5,12 +5,19 @@ import { AppShell } from './components/AppShell'
 import { AppHeader } from './components/AppHeader'
 import { TaskInput } from './components/TaskInput'
 import { TaskList } from './components/TaskList'
+import { Toast } from './components/Toast'
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [createError, setCreateError] = useState<string | null>(null)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg)
+    setTimeout(() => setToastMessage(null), 3000)
+  }
 
   const loadTasks = () => {
     setError(null)
@@ -44,7 +51,7 @@ function App() {
         prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
       )
     } catch {
-      // Silent failure — Toast error notification deferred to Story 5.1
+      showToast("Couldn't update the task. Give it another try.")
     }
   }
 
@@ -53,7 +60,7 @@ function App() {
       await deleteTask(id)
       setTasks((prev) => prev.filter((t) => t.id !== id))
     } catch {
-      // Silent failure — Toast error notification deferred to Story 5.1
+      showToast("Couldn't delete the task. Give it another try.")
     }
   }
 
@@ -77,6 +84,7 @@ function App() {
         onToggle={handleToggleTask}
         onDelete={handleDeleteTask}
       />
+      {toastMessage && <Toast message={toastMessage} />}
     </AppShell>
   )
 }
