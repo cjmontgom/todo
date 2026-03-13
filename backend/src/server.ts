@@ -4,7 +4,10 @@ import { taskRoutes } from './routes.js'
 
 const server = fastify({ logger: true })
 
-server.register(cors)
+server.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+})
 server.register(taskRoutes)
 
 const start = async () => {
