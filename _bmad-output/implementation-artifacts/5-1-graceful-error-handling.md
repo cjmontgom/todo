@@ -1,6 +1,6 @@
 # Story 5.1: Graceful Error Handling
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -38,33 +38,33 @@ So that I trust the app and know what to do.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `Toast` component (AC: #3, #4)
-  - [ ] Create `frontend/src/components/Toast.tsx`
-  - [ ] Accept `message: string` prop
-  - [ ] `role="alert"` and `aria-live="polite"` on the container
-  - [ ] Fixed position: bottom-center of viewport — `fixed bottom-6 left-1/2 -translate-x-1/2`
-  - [ ] Styling: dark warm background (`bg-text-primary`), white text, rounded-lg, `px-4 py-3`, `shadow-lg`
-  - [ ] Slide-in animation from bottom: `animate-slide-up` or use inline Tailwind `translate-y` with `transition`
-  - [ ] `max-w-sm w-max` to size naturally with content but cap width on small screens
-  - [ ] `z-50` to float above all other content
-- [ ] Task 2: Update `App.tsx` to manage toast state and wire it up (AC: #3, #4)
-  - [ ] Add `toastMessage: string | null` state (initialised to `null`)
-  - [ ] Add `showToast(msg: string)` helper — sets `toastMessage`, then clears it after 3000ms via `setTimeout`
-  - [ ] Update `handleToggleTask` catch block: call `showToast("Couldn't update the task. Give it another try.")` instead of silent failure
-  - [ ] Update `handleDeleteTask` catch block: call `showToast("Couldn't delete the task. Give it another try.")` instead of silent failure
-  - [ ] Render `{toastMessage && <Toast message={toastMessage} />}` inside the `AppShell` JSX (after `TaskList`)
-  - [ ] Import `Toast` from `./components/Toast`
-- [ ] Task 3: Verify AC #1 and AC #2 are already satisfied by existing code (no code changes needed)
-  - [ ] Confirm `ErrorState` renders with retry on load failure (already in `TaskList.tsx` + `App.tsx`)
-  - [ ] Confirm inline `createError` display and dismissal on typing already works (already in `TaskInput.tsx`)
-- [ ] Task 4: Add `Toast` component tests (AC: #3, #4)
-  - [ ] Create `frontend/src/components/Toast.test.tsx`
-  - [ ] Test: renders message text
-  - [ ] Test: has `role="alert"` attribute
-  - [ ] Test: has `aria-live="polite"` attribute
-- [ ] Task 5: Update `App.test.tsx` for toast behaviour on toggle and delete failures (AC: #3, #4)
-  - [ ] Add test: toggle failure shows toast with warm error message
-  - [ ] Add test: delete failure shows toast with warm error message
+- [x] Task 1: Create `Toast` component (AC: #3, #4)
+  - [x] Create `frontend/src/components/Toast.tsx`
+  - [x] Accept `message: string` prop
+  - [x] `role="alert"` and `aria-live="polite"` on the container
+  - [x] Fixed position: bottom-center of viewport — `fixed bottom-6 left-1/2 -translate-x-1/2`
+  - [x] Styling: dark warm background (`bg-text-primary`), white text, rounded-lg, `px-4 py-3`, `shadow-lg`
+  - [x] Slide-in animation from bottom: `animate-slide-up` or use inline Tailwind `translate-y` with `transition`
+  - [x] `max-w-sm w-max` to size naturally with content but cap width on small screens
+  - [x] `z-50` to float above all other content
+- [x] Task 2: Update `App.tsx` to manage toast state and wire it up (AC: #3, #4)
+  - [x] Add `toastMessage: string | null` state (initialised to `null`)
+  - [x] Add `showToast(msg: string)` helper — sets `toastMessage`, then clears it after 3000ms via `setTimeout`
+  - [x] Update `handleToggleTask` catch block: call `showToast("Couldn't update the task. Give it another try.")` instead of silent failure
+  - [x] Update `handleDeleteTask` catch block: call `showToast("Couldn't delete the task. Give it another try.")` instead of silent failure
+  - [x] Render `{toastMessage && <Toast message={toastMessage} />}` inside the `AppShell` JSX (after `TaskList`)
+  - [x] Import `Toast` from `./components/Toast`
+- [x] Task 3: Verify AC #1 and AC #2 are already satisfied by existing code (no code changes needed)
+  - [x] Confirm `ErrorState` renders with retry on load failure (already in `TaskList.tsx` + `App.tsx`)
+  - [x] Confirm inline `createError` display and dismissal on typing already works (already in `TaskInput.tsx`)
+- [x] Task 4: Add `Toast` component tests (AC: #3, #4)
+  - [x] Create `frontend/src/components/Toast.test.tsx`
+  - [x] Test: renders message text
+  - [x] Test: has `role="alert"` attribute
+  - [x] Test: has `aria-live="polite"` attribute
+- [x] Task 5: Update `App.test.tsx` for toast behaviour on toggle and delete failures (AC: #3, #4)
+  - [x] Add test: toggle failure shows toast with warm error message
+  - [x] Add test: delete failure shows toast with warm error message
 
 ## Dev Notes
 
@@ -369,3 +369,29 @@ No backend changes. No other frontend files modified.
 - [Source: prd.md#FR12] — system displays clear, non-technical error message when a task operation fails
 - [Source: prd.md#FR13] — system remains usable when backend is temporarily unavailable
 - [Source: prd.md#FR14] — system preserves existing task data integrity when errors occur
+
+## File List
+
+- `frontend/src/components/Toast.tsx` — NEW: Toast component with role="alert", aria-live="polite", fixed positioned
+- `frontend/src/components/Toast.test.tsx` — NEW: 3 unit tests for Toast (message render, role, aria-live)
+- `frontend/src/App.tsx` — Modified: added toastMessage state, showToast helper, updated catch blocks, render Toast
+- `frontend/src/App.test.tsx` — Modified: added 2 integration tests (toggle failure toast, delete failure toast)
+
+## Dev Agent Record
+
+### Implementation Plan
+
+All-frontend story with no backend changes. Followed red-green-refactor cycle:
+
+1. **Toast.tsx** — Created minimal functional component matching spec exactly (role="alert", aria-live="polite", fixed bottom-centre positioning using Tailwind, bg-text-primary warm charcoal, z-50)
+2. **App.tsx** — Added `toastMessage` state + `showToast` helper (auto-clears via setTimeout after 3000ms), replaced silent catch blocks in `handleToggleTask` and `handleDeleteTask` with toast calls, conditionally renders `<Toast>` after `<TaskList>` inside `<AppShell>`
+3. **AC #1 & #2 verified** — ErrorState load-failure path and inline createError display were already correctly implemented in prior stories; no changes needed
+4. **Tests** — Toast unit tests cover message render, role, and aria-live. App integration tests verify alert appears with correct text on toggle and delete failures
+
+### Completion Notes
+
+✅ All 5 tasks complete. All 40 tests pass (5 test files). No regressions. No new dependencies. No backend changes. Only permitted story sections modified. File List complete. AC #1–#6 satisfied.
+
+## Change Log
+
+- 2026-03-13: Implemented graceful error handling for toggle and delete failures via Toast component. AC #3 and AC #4 delivered. AC #1, #2, #5, #6 confirmed satisfied by existing code.

@@ -58,7 +58,7 @@ development_status:
   epic-4-retrospective: optional
 
   epic-5: in-progress
-  5-1-graceful-error-handling: ready-for-dev
+  5-1-graceful-error-handling: review
   epic-5-retrospective: optional
 
   epic-6: backlog
