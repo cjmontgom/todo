@@ -1,6 +1,6 @@
 # Story 1.2: View Tasks on App Load
 
-Status: review
+Status: done
 
 ## Story
 

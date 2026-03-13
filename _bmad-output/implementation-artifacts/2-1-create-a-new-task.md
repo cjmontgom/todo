@@ -1,6 +1,6 @@
 # Story 2.1: Create a New Task
 
-Status: review
+Status: done
 
 ## Story
 

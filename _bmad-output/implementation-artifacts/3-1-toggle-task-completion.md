@@ -1,6 +1,6 @@
 # Story 3.1: Toggle Task Completion
 
-Status: review
+Status: done
 
 ## Story
 

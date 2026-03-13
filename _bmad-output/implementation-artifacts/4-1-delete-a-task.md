@@ -1,6 +1,6 @@
 # Story 4.1: Delete a Task
 
-Status: review
+Status: done
 
 ## Story
 
