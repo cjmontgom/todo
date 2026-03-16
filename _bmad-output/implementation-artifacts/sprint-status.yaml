@@ -57,12 +57,12 @@ development_status:
   4-1-delete-a-task: done
   epic-4-retrospective: optional
 
-  epic-5: in-progress
-  5-1-graceful-error-handling: ready-for-dev
+  epic-5: done
+  5-1-graceful-error-handling: done
   epic-5-retrospective: optional
 
-  epic-6: backlog
-  6-1-keyboard-navigation-screen-reader-support: backlog
+  epic-6: in-progress
+  6-1-keyboard-navigation-screen-reader-support: ready-for-dev
   epic-6-retrospective: optional
 
   epic-7: backlog
