@@ -66,7 +66,7 @@ development_status:
   epic-6-retrospective: optional
 
   epic-7: in-progress
-  7-1-playwright-e2e-test-suite: ready-for-dev
+  7-1-playwright-e2e-test-suite: review
   epic-7-retrospective: optional
 
   epic-8: backlog

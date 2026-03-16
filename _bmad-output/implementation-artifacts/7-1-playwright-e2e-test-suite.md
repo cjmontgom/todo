@@ -1,6 +1,6 @@
 # Story 7.1: Playwright E2E Test Suite
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -36,12 +36,12 @@ so that I can verify the full application works correctly in a real browser.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `e2e/epic-7-e2e-test-suite.spec.ts` with all 5 required core user journey tests (AC: #1–#6)
-  - [ ] Test 1 — empty state: navigate to `/`, assert `"Nothing here yet. What's on your mind?"` is visible
-  - [ ] Test 2 — create a task: fill input, press Enter, assert task text is visible in the list
-  - [ ] Test 3 — complete a task: seed a task via `seedTask()`, navigate, click checkbox, assert `aria-checked="true"` and `line-through` class
-  - [ ] Test 4 — delete a task: seed a task, navigate, click delete button, assert task text is no longer visible
-  - [ ] Test 5 — error state: use `page.route()` to intercept `GET /api/tasks` with a 500, navigate to `/`, assert error message and Retry button are visible
+- [x] Task 1: Create `e2e/epic-7-e2e-test-suite.spec.ts` with all 5 required core user journey tests (AC: #1–#6)
+  - [x] Test 1 — empty state: navigate to `/`, assert `"Nothing here yet. What's on your mind?"` is visible
+  - [x] Test 2 — create a task: fill input, press Enter, assert task text is visible in the list
+  - [x] Test 3 — complete a task: seed a task via `seedTask()`, navigate, click checkbox, assert `aria-checked="true"` and `line-through` class
+  - [x] Test 4 — delete a task: seed a task, navigate, click delete button, assert task text is no longer visible
+  - [x] Test 5 — error state: use `page.route()` to intercept `GET /api/tasks` with a 500, navigate to `/`, assert error message and Retry button are visible
 
 ## Dev Notes
 
@@ -209,6 +209,21 @@ claude-4-sonnet-medium
 
 ### Debug Log References
 
+_No debug issues encountered._
+
 ### Completion Notes List
 
+- Created `e2e/epic-7-e2e-test-suite.spec.ts` following the exact implementation from Dev Notes
+- All 5 core user journey tests pass: empty state, create task, complete task, delete task, error state with retry
+- Used `deleteAllTasks()` in `beforeEach` for clean state; `seedTask()` for pre-populating test data
+- Used `page.route()` to intercept `GET /api/tasks` with a 500 response before `page.goto()` for the error state test
+- Pre-existing 4 failures in `epic-5-error-handling.spec.ts` (toast role assertions) confirmed to be pre-existing — not introduced by this story
+- All 6 Acceptance Criteria satisfied; 62 of 66 total tests pass (4 pre-existing failures unrelated to this story)
+
 ### File List
+
+- `e2e/epic-7-e2e-test-suite.spec.ts` (created)
+
+### Change Log
+
+- 2026-03-16: Created `e2e/epic-7-e2e-test-suite.spec.ts` with 5 core user journey E2E tests covering AC #1–#6
