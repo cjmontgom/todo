@@ -115,17 +115,124 @@ Critical violations: 0 ✅
 
 ---
 
+## 4. Performance Analysis (Chrome DevTools — 2026-03-16)
+
+**Tool:** Chrome DevTools Performance Trace + Lighthouse (desktop, navigation mode)
+**Environment:** Local dev server (Vite HMR), unthrottled CPU and network
+
+### 4.1 Core Web Vitals
+
+| Metric | Value | Rating |
+|--------|-------|--------|
+| LCP (Largest Contentful Paint) | **155 ms** | ✅ Excellent (threshold: <2500 ms) |
+| CLS (Cumulative Layout Shift) | **0.00** | ✅ Perfect (threshold: <0.1) |
+| TTFB (Time to First Byte) | **9 ms** | ✅ Excellent |
+| LCP Render Delay | **146 ms** (94.2% of LCP) | ℹ️ See note below |
+
+**LCP Element:** `<span class="flex-1 line-through text-completed">` — inline text node, no network fetch required.
+
+**Note on Render Delay:** 94.2% of LCP time is render delay (JavaScript execution + React hydration), not network. This is expected for a React SPA where the LCP element is rendered client-side after JS runs. There is no LCP image or resource to optimise. The absolute time (146 ms) is well within acceptable bounds.
+
+---
+
+### 4.2 Network Dependency Tree
+
+**Max critical path latency: 138 ms**
+
+The longest request chain at page load:
+
+```
+HTML (17 ms)
+  └─ main.tsx (19 ms)
+       └─ App.tsx (28 ms)
+            └─ api.ts (36 ms)
+                 └─ GET /api/tasks (138 ms) ← end of critical path
+```
+
+All component `.tsx` files are fetched individually (dev mode). In a production build, Vite bundles these into a small number of chunks — the 14 individual module requests seen here will not appear in production.
+
+**Preconnect hints:** `fonts.googleapis.com` and `fonts.gstatic.com` are correctly preconnected in the HTML.
+
+---
+
+### 4.3 Third-Party Resources
+
+| Resource | Size | Render-Blocking | Impact |
+|----------|------|-----------------|--------|
+| Google Fonts CSS (`Inter`) | ~0.2 ms download | Yes (5 ms total) | ℹ️ Low impact locally; estimated savings: 0 ms |
+| Inter woff2 font | ~56 kB | No | ℹ️ Loaded after render |
+
+**Finding:** Google Fonts is technically render-blocking but has zero measured impact on FCP/LCP in this application. For production, this could be further optimised by self-hosting the font or adding `font-display: optional`.
+
+---
+
+### 4.4 Lighthouse Scores
+
+| Category | Score |
+|----------|-------|
+| Accessibility | 96 / 100 |
+| Best Practices | 100 / 100 |
+| SEO | 82 / 100 |
+
+**Performance note:** Lighthouse performance score is not included as per project scope (see story 8.1 — performance auditing excluded).
+
+---
+
+### 4.5 Findings and Remediations
+
+#### FINDING 1 — Color Contrast Failure (Accessibility, WCAG 1.4.3) 🔴 Fixed
+
+- **Selector:** `span.flex-1.text-completed` (completed task text)
+- **Original colour:** `#B0AEA9` on `#FAFAF8` background
+- **Contrast ratio:** 2.12:1 — **fails** WCAG AA minimum of 4.5:1 for normal text
+- **Remediation applied:** Updated `--color-completed` in `frontend/src/index.css` from `#B0AEA9` → `#6E6C6A`
+- **New contrast ratio:** 5.00:1 — **passes** WCAG AA ✅
+- **Visual impact:** Completed tasks remain visually muted/struck-through but are now legible for low-vision users
+
+#### FINDING 2 — No `<meta name="description">` Tag (SEO) 🟡 Informational
+
+- **Lighthouse audit:** `meta-description` — score 0
+- **Detail:** The page has no meta description. This reduces discoverability in search engine results.
+- **Remediation (future):** Add `<meta name="description" content="A simple, accessible to-do list application.">` to `frontend/index.html`. Low priority for a local training project, but required for any public deployment.
+
+#### FINDING 3 — `/robots.txt` Returns HTML (SEO) 🟡 Informational
+
+- **Lighthouse audit:** `robots-txt` — 21 parse errors
+- **Detail:** The Vite dev server returns `index.html` for all unmatched routes, including `/robots.txt`. This is expected in local development and not a code defect.
+- **Remediation (future):** Add a `public/robots.txt` file to the frontend. Vite automatically serves files from `public/` at the root path. Content for a training app: `User-agent: *\nDisallow: /`. This resolves the Lighthouse audit and is also required for production.
+
+#### FINDING 4 — Double API Request on Load (Development Only) ℹ️ No Action Required
+
+- **Observed:** Two identical `GET /api/tasks` requests fired on initial page load
+- **Cause:** React 18 `StrictMode` intentionally double-invokes `useEffect` in development to surface side effects
+- **Production impact:** None — `StrictMode`'s double-invoke only occurs in development builds. A production build (`npm run build`) fires the API call once.
+- **Recommendation:** No code change required. Keep `StrictMode` enabled as it is a valuable development safety net.
+
+#### FINDING 5 — Google Fonts Render-Blocking Request ℹ️ Low Priority
+
+- **Observed:** `fonts.googleapis.com` CSS is render-blocking (5 ms, 0 ms estimated savings)
+- **Detail:** Zero measured impact on LCP or FCP at current scale. The font loads very quickly from cache on repeat visits.
+- **Remediation (future, production):** Self-host the Inter font or add `font-display: swap` / `font-display: optional` to the `@font-face` declaration to prevent render-blocking entirely. Only relevant if deploying to production with real network latency.
+
+---
+
 ## Summary
 
-| Area                  | Result |
-|-----------------------|--------|
-| Frontend test coverage | ✅ PASS (84.16% stmts, threshold 70%) |
-| Backend test coverage  | ✅ PASS (98.70% lines, threshold 70%) |
-| WCAG AA accessibility  | ✅ PASS (0 critical violations) |
-| XSS                   | ✅ No issue |
-| SQL Injection          | ✅ No issue |
-| CORS                  | ℹ️ Informational — permissive for V1, restrict for production |
-| Input Validation       | ✅ No issue |
-| Error Response Leakage | ✅ No issue |
+| Area                       | Result |
+|----------------------------|--------|
+| Frontend test coverage     | ✅ PASS (84.16% stmts, threshold 70%) |
+| Backend test coverage      | ✅ PASS (98.70% lines, threshold 70%) |
+| WCAG AA accessibility      | ✅ PASS (0 critical violations) |
+| XSS                        | ✅ No issue |
+| SQL Injection               | ✅ No issue |
+| CORS                       | ℹ️ Informational — permissive for V1, restrict for production |
+| Input Validation            | ✅ No issue |
+| Error Response Leakage     | ✅ No issue |
+| LCP                        | ✅ 155 ms (excellent) |
+| CLS                        | ✅ 0.00 (perfect) |
+| Lighthouse Accessibility   | ✅ 96/100 |
+| Lighthouse Best Practices  | ✅ 100/100 |
+| Lighthouse SEO             | ⚠️ 82/100 (meta description + robots.txt — both informational for V1) |
+| Contrast: completed tasks  | ✅ Fixed — `#6E6C6A` gives 5.00:1 (was 2.12:1 with `#B0AEA9`) |
 
-**Overall QA Result: PASS** — The application meets all specified quality thresholds for coverage, accessibility, and security at V1 scope.
+**Overall QA Result: PASS** — The application meets all specified quality thresholds for coverage, accessibility, and security at V1 scope. One colour contrast failure discovered via performance audit was remediated.
