@@ -97,6 +97,16 @@ describe('TaskInput', () => {
     expect(onClearError).toHaveBeenCalled()
   })
 
+  it('task input has an accessible label', () => {
+    renderTaskInput()
+    expect(screen.getByRole('textbox', { name: 'Add a task' })).toBeInTheDocument()
+  })
+
+  it('task input has id="task-input" for skip link targeting', () => {
+    renderTaskInput()
+    expect(document.getElementById('task-input')).toBeInTheDocument()
+  })
+
   it('disables button during submission', async () => {
     const user = userEvent.setup()
     let resolveCreate: () => void

@@ -42,6 +42,8 @@ export function TaskInput({ onCreateTask, createError, onClearError }: TaskInput
     <div className="mb-4">
       <div className="flex gap-2">
         <input
+          id="task-input"
+          aria-label="Add a task"
           type="text"
           value={text}
           onChange={handleChange}
