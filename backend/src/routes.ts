@@ -1,9 +1,14 @@
 import { FastifyInstance } from 'fastify'
-import { getAllTasks, createTask, toggleTask, deleteTask } from './db.js'
+import { getAllTasks, createTask, toggleTask, deleteTask, checkDb } from './db.js'
 
 export async function taskRoutes(server: FastifyInstance) {
   server.get('/api/health', async (_request, reply) => {
-    return reply.send({ status: 'ok' })
+    try {
+      await checkDb()
+      return reply.send({ status: 'ok' })
+    } catch {
+      return reply.status(503).send({ status: 'error' })
+    }
   })
 
   server.get('/api/tasks', async (_request, reply) => {

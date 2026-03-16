@@ -13,7 +13,7 @@ todo/
 ## Prerequisites
 
 - Node.js 20+
-- PostgreSQL 15+ (via Homebrew on macOS, or your preferred installation method)
+- PostgreSQL 17 (via Homebrew on macOS, or your preferred installation method)
 
 ## Getting Started
 

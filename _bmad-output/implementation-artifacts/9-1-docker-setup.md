@@ -1,6 +1,6 @@
 # Story 9.1: Docker Setup
 
-Status: review
+Status: done
 
 ## Story
 
@@ -326,14 +326,15 @@ None.
 
 ### File List
 
-- `backend/src/routes.ts` (modified — added `GET /api/health`)
-- `backend/src/routes.test.ts` (modified — added health endpoint test)
-- `backend/Dockerfile` (new)
+- `backend/src/routes.ts` (modified — added `GET /api/health` with DB check)
+- `backend/src/routes.test.ts` (modified — added health endpoint tests incl. 503, added 400 non-numeric ID tests for PATCH and DELETE)
+- `backend/src/db.ts` (modified — added `checkDb` export)
+- `backend/Dockerfile` (modified — added `HEALTHCHECK`)
 - `backend/.dockerignore` (new)
-- `frontend/Dockerfile` (new)
-- `frontend/nginx.conf` (new)
+- `frontend/Dockerfile` (modified — switched to `nginx-unprivileged:alpine`, port 8080, added `HEALTHCHECK`)
+- `frontend/nginx.conf` (modified — port 8080, added `gzip_vary on`)
 - `frontend/.dockerignore` (new)
-- `docker-compose.yml` (new)
+- `docker-compose.yml` (modified — removed deprecated `version`, added `start_period`, grep-based healthcheck, port 5173:8080)
 - `.env.example` (new)
-- `README.md` (modified — added Docker section)
+- `README.md` (modified — added Docker section, fixed PostgreSQL version)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified — status updated)

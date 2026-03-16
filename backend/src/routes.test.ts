@@ -5,6 +5,7 @@ const getAllTasksMock = mock.fn<() => Promise<unknown>>()
 const createTaskMock = mock.fn<(text: string) => Promise<unknown>>()
 const toggleTaskMock = mock.fn<(id: number, completed: boolean) => Promise<unknown>>()
 const deleteTaskMock = mock.fn<(id: number) => Promise<unknown>>()
+const checkDbMock = mock.fn<() => Promise<void>>()
 
 mock.module('./db.js', {
   namedExports: {
@@ -12,6 +13,7 @@ mock.module('./db.js', {
     createTask: createTaskMock,
     toggleTask: toggleTaskMock,
     deleteTask: deleteTaskMock,
+    checkDb: checkDbMock,
   },
 })
 
@@ -31,13 +33,26 @@ async function buildApp() {
 }
 
 describe('GET /api/health', () => {
-  it('returns { status: ok } with 200', async () => {
+  it('returns { status: ok } with 200 when DB is reachable', async () => {
+    checkDbMock.mock.mockImplementation(() => Promise.resolve())
+
     const app = await buildApp()
     const response = await app.inject({ method: 'GET', url: '/api/health' })
 
     assert.equal(response.statusCode, 200)
-    const body = JSON.parse(response.body)
-    assert.deepEqual(body, { status: 'ok' })
+    assert.deepEqual(JSON.parse(response.body), { status: 'ok' })
+
+    await app.close()
+  })
+
+  it('returns { status: error } with 503 when DB is unreachable', async () => {
+    checkDbMock.mock.mockImplementation(() => Promise.reject(new Error('Connection refused')))
+
+    const app = await buildApp()
+    const response = await app.inject({ method: 'GET', url: '/api/health' })
+
+    assert.equal(response.statusCode, 503)
+    assert.deepEqual(JSON.parse(response.body), { status: 'error' })
 
     await app.close()
   })
@@ -251,6 +266,20 @@ describe('PATCH /api/tasks/:id', () => {
 
     await app.close()
   })
+
+  it('returns 400 for non-numeric task ID', async () => {
+    const app = await buildApp()
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/api/tasks/abc',
+      payload: { completed: true },
+    })
+
+    assert.equal(response.statusCode, 400)
+    assert.equal(JSON.parse(response.body).error, 'Invalid task ID')
+
+    await app.close()
+  })
 })
 
 describe('DELETE /api/tasks/:id', () => {
@@ -297,6 +326,19 @@ describe('DELETE /api/tasks/:id', () => {
     assert.equal(response.statusCode, 500)
     const body = JSON.parse(response.body)
     assert.equal(body.error, 'Something went wrong')
+
+    await app.close()
+  })
+
+  it('returns 400 for non-numeric task ID', async () => {
+    const app = await buildApp()
+    const response = await app.inject({
+      method: 'DELETE',
+      url: '/api/tasks/abc',
+    })
+
+    assert.equal(response.statusCode, 400)
+    assert.equal(JSON.parse(response.body).error, 'Invalid task ID')
 
     await app.close()
   })

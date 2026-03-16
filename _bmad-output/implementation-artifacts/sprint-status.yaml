@@ -69,10 +69,10 @@ development_status:
   7-1-playwright-e2e-test-suite: done
   epic-7-retrospective: optional
 
-  epic-8: in-progress
-  8-1-qa-reports: review
+  epic-8: done
+  8-1-qa-reports: done
   epic-8-retrospective: optional
 
-  epic-9: in-progress
-  9-1-docker-setup: review
+  epic-9: done
+  9-1-docker-setup: done
   epic-9-retrospective: optional

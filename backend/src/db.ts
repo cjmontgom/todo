@@ -53,4 +53,8 @@ export async function deleteTask(id: number) {
   return result.rows.length > 0
 }
 
+export async function checkDb() {
+  await pool.query('SELECT 1')
+}
+
 export default pool
