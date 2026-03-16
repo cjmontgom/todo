@@ -61,8 +61,8 @@ development_status:
   5-1-graceful-error-handling: done
   epic-5-retrospective: optional
 
-  epic-6: in-progress
-  6-1-keyboard-navigation-screen-reader-support: ready-for-dev
+  epic-6: done
+  6-1-keyboard-navigation-screen-reader-support: done
   epic-6-retrospective: optional
 
   epic-7: backlog

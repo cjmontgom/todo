@@ -1,6 +1,6 @@
 # Story 6.1: Keyboard Navigation & Screen Reader Support
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -44,34 +44,34 @@ So that the app is accessible to me.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add skip link and `<main>` landmark to `AppShell.tsx` (AC: #1, #7)
-  - [ ] Add a visually-hidden skip link as the first child of the outer div: `<a href="#task-input">Skip to task input</a>`
-  - [ ] Style with `sr-only focus:not-sr-only` pattern — hidden until focused, then revealed as a coral pill in the top-left
-  - [ ] Change the inner `<div>` to `<main>` for landmark navigation semantics
-- [ ] Task 2: Add `id` and `aria-label` to the task input field in `TaskInput.tsx` (AC: #1, #7)
-  - [ ] Add `id="task-input"` to the `<input>` element — this is the skip link target
-  - [ ] Add `aria-label="Add a task"` to the `<input>` element (placeholder is not a sufficient label for screen readers)
-- [ ] Task 3: Verify ACs #2–#6 and #8 are already satisfied by existing code (no code changes needed)
-  - [ ] Confirm Space key toggles Checkbox — button element handles Space natively ✓
-  - [ ] Confirm Checkbox has `role="checkbox"`, `aria-checked`, and `aria-label` ✓
-  - [ ] Confirm DeleteButton has `aria-label="Delete task: [task text]"` ✓
-  - [ ] Confirm TaskList renders `<ul aria-label="Task list, X items">` with `<li>` children ✓
-  - [ ] Confirm Toast has `role="alert"` and `aria-live="polite"` ✓
-  - [ ] Confirm all interactive elements use `w-11 h-11` (44x44px) touch targets ✓
-  - [ ] Confirm focus outlines: `focus:outline-2 focus:outline-coral focus:outline-offset-2` on all interactive elements ✓
-- [ ] Task 4: Add unit tests for skip link and semantic structure (AC: #1, #7)
-  - [ ] Create `frontend/src/components/AppShell.test.tsx`
-  - [ ] Test: renders a skip link with `href="#task-input"` and text "Skip to task input"
-  - [ ] Test: renders a `<main>` element as the content landmark
-- [ ] Task 5: Add unit test for task input label (AC: #1)
-  - [ ] Update `frontend/src/components/TaskInput.test.tsx`
-  - [ ] Add test: input has `aria-label="Add a task"`
-  - [ ] Add test: input has `id="task-input"`
-- [ ] Task 6: Create E2E test file for Epic 6 (AC: #1, #2, #7)
-  - [ ] Create `e2e/epic-6-accessibility.spec.ts`
-  - [ ] Test: skip link is present and has correct `href`
-  - [ ] Test: keyboard Tab order reaches task input, submit button, then task controls
-  - [ ] Test: task input field has accessible label
+- [x] Task 1: Add skip link and `<main>` landmark to `AppShell.tsx` (AC: #1, #7)
+  - [x] Add a visually-hidden skip link as the first child of the outer div: `<a href="#task-input">Skip to task input</a>`
+  - [x] Style with `sr-only focus:not-sr-only` pattern — hidden until focused, then revealed as a coral pill in the top-left
+  - [x] Change the inner `<div>` to `<main>` for landmark navigation semantics
+- [x] Task 2: Add `id` and `aria-label` to the task input field in `TaskInput.tsx` (AC: #1, #7)
+  - [x] Add `id="task-input"` to the `<input>` element — this is the skip link target
+  - [x] Add `aria-label="Add a task"` to the `<input>` element (placeholder is not a sufficient label for screen readers)
+- [x] Task 3: Verify ACs #2–#6 and #8 are already satisfied by existing code (no code changes needed)
+  - [x] Confirm Space key toggles Checkbox — button element handles Space natively ✓
+  - [x] Confirm Checkbox has `role="checkbox"`, `aria-checked`, and `aria-label` ✓
+  - [x] Confirm DeleteButton has `aria-label="Delete task: [task text]"` ✓
+  - [x] Confirm TaskList renders `<ul aria-label="Task list, X items">` with `<li>` children ✓
+  - [x] Confirm Toast has `role="alert"` and `aria-live="polite"` ✓
+  - [x] Confirm all interactive elements use `w-11 h-11` (44x44px) touch targets ✓
+  - [x] Confirm focus outlines: `focus:outline-2 focus:outline-coral focus:outline-offset-2` on all interactive elements ✓
+- [x] Task 4: Add unit tests for skip link and semantic structure (AC: #1, #7)
+  - [x] Create `frontend/src/components/AppShell.test.tsx`
+  - [x] Test: renders a skip link with `href="#task-input"` and text "Skip to task input"
+  - [x] Test: renders a `<main>` element as the content landmark
+- [x] Task 5: Add unit test for task input label (AC: #1)
+  - [x] Update `frontend/src/components/TaskInput.test.tsx`
+  - [x] Add test: input has `aria-label="Add a task"`
+  - [x] Add test: input has `id="task-input"`
+- [x] Task 6: Create E2E test file for Epic 6 (AC: #1, #2, #7)
+  - [x] Create `e2e/epic-6-accessibility.spec.ts`
+  - [x] Test: skip link is present and has correct `href`
+  - [x] Test: keyboard Tab order reaches task input, submit button, then task controls
+  - [x] Test: task input field has accessible label
 
 ## Dev Notes
 
