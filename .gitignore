@@ -2,7 +2,6 @@ node_modules/
 .env
 dist/
 .DS_Store
-docs/ai-integration-log.md
 /test-results/
 /playwright-report/
 /blob-report/
