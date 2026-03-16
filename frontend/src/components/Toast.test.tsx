@@ -10,7 +10,7 @@ describe('Toast', () => {
 
   it('renders the live region container even when message is null', () => {
     render(<Toast message={null} />)
-    expect(screen.getByRole('status')).toBeInTheDocument()
+    expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument()
   })
 
   it('has role="status"', () => {

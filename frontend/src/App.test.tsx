@@ -208,9 +208,9 @@ describe('App', () => {
     await user.click(activeCheckbox)
 
     await waitFor(() => {
-      expect(screen.getByRole('alert')).toBeInTheDocument()
+      expect(screen.getByRole('status')).toBeInTheDocument()
     })
-    expect(screen.getByRole('alert')).toHaveTextContent(
+    expect(screen.getByRole('status')).toHaveTextContent(
       "Couldn't update the task. Give it another try."
     )
   })
@@ -230,9 +230,9 @@ describe('App', () => {
     await user.click(deleteBtn)
 
     await waitFor(() => {
-      expect(screen.getByRole('alert')).toBeInTheDocument()
+      expect(screen.getByRole('status')).toBeInTheDocument()
     })
-    expect(screen.getByRole('alert')).toHaveTextContent(
+    expect(screen.getByRole('status')).toHaveTextContent(
       "Couldn't delete the task. Give it another try."
     )
   })
