@@ -84,7 +84,7 @@ function App() {
         onToggle={handleToggleTask}
         onDelete={handleDeleteTask}
       />
-      {toastMessage && <Toast message={toastMessage} />}
+      <Toast message={toastMessage} />
     </AppShell>
   )
 }

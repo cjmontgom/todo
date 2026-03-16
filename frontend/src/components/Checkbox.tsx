@@ -54,9 +54,7 @@ export function Checkbox({ checked, label, onChange, disabled }: CheckboxProps) 
   return (
     <div
       className="w-11 h-11 flex items-center justify-center"
-      role="checkbox"
-      aria-checked={checked}
-      aria-label={label}
+      aria-hidden="true"
     >
       {inner}
     </div>

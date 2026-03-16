@@ -154,7 +154,7 @@ test.describe('Epic 6: Accessibility & Keyboard Navigation', () => {
   test('task list aria-label updates when task count changes', async ({ page }) => {
     await seedTask('Count task A')
     await page.goto('/')
-    await expect(page.getByRole('list', { name: 'Task list, 1 items' })).toBeVisible()
+    await expect(page.getByRole('list', { name: 'Task list, 1 item' })).toBeVisible()
 
     await page.getByRole('textbox', { name: 'Add a task' }).fill('Count task B')
     await page.keyboard.press('Enter')
@@ -179,9 +179,9 @@ test.describe('Epic 6: Accessibility & Keyboard Navigation', () => {
 
     await page.getByRole('button', { name: 'Delete task: Toast aria task' }).click()
 
-    const toast = page.getByRole('alert')
+    const toast = page.getByRole('status')
     await expect(toast).toBeVisible()
-    await expect(toast).toHaveAttribute('role', 'alert')
+    await expect(toast).toHaveAttribute('role', 'status')
     await expect(toast).toHaveAttribute('aria-live', 'polite')
   })
 

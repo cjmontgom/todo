@@ -44,6 +44,7 @@ export function TaskInput({ onCreateTask, createError, onClearError }: TaskInput
         <input
           id="task-input"
           aria-label="Add a task"
+          aria-describedby={createError ? 'task-input-error' : undefined}
           type="text"
           value={text}
           onChange={handleChange}
@@ -64,7 +65,11 @@ export function TaskInput({ onCreateTask, createError, onClearError }: TaskInput
         </button>
       </div>
       {createError && (
-        <div className="mt-2 px-3 py-2 bg-error-bg text-error-text text-sm rounded-lg">
+        <div
+          id="task-input-error"
+          role="alert"
+          className="mt-2 px-3 py-2 bg-error-bg text-error-text text-sm rounded-lg"
+        >
           {createError}
         </div>
       )}

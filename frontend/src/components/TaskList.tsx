@@ -32,7 +32,7 @@ export function TaskList({ tasks, loading, error, onRetry, onToggle, onDelete }:
   })
 
   return (
-    <ul aria-label={`Task list, ${tasks.length} items`}>
+    <ul aria-label={`Task list, ${tasks.length} ${tasks.length === 1 ? 'item' : 'items'}`}>
       {sorted.map((task) => (
         <li key={task.id}>
           <TaskItem task={task} onToggle={onToggle} onDelete={onDelete} />
