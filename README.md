@@ -79,6 +79,49 @@ npm run dev             # http://localhost:5173
 
 Open http://localhost:5173 in your browser.
 
+## Running with Docker
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (macOS/Windows) or Docker Engine + Compose plugin (Linux)
+
+### Start the application
+
+```bash
+docker-compose up
+```
+
+This starts postgres, backend, and frontend in the correct order (postgres → backend → frontend). On first run, Docker builds the images — subsequent starts are faster.
+
+Open http://localhost:5173 in your browser.
+
+### Environment variable overrides
+
+```bash
+cp .env.example .env
+# edit .env to customise POSTGRES_PASSWORD or VITE_API_URL
+docker-compose up
+```
+
+### Useful commands
+
+```bash
+# Run in the background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Check health status
+docker ps
+
+# Stop and remove containers
+docker-compose down
+
+# Remove containers and database volume (full reset)
+docker-compose down -v
+```
+
 ## Running Tests
 
 ```bash

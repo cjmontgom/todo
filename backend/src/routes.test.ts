@@ -30,6 +30,19 @@ async function buildApp() {
   return app
 }
 
+describe('GET /api/health', () => {
+  it('returns { status: ok } with 200', async () => {
+    const app = await buildApp()
+    const response = await app.inject({ method: 'GET', url: '/api/health' })
+
+    assert.equal(response.statusCode, 200)
+    const body = JSON.parse(response.body)
+    assert.deepEqual(body, { status: 'ok' })
+
+    await app.close()
+  })
+})
+
 describe('GET /api/tasks', () => {
   it('returns tasks with 200 status', async () => {
     getAllTasksMock.mock.mockImplementation(() => Promise.resolve(mockTasks))

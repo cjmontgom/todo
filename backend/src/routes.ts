@@ -2,6 +2,10 @@ import { FastifyInstance } from 'fastify'
 import { getAllTasks, createTask, toggleTask, deleteTask } from './db.js'
 
 export async function taskRoutes(server: FastifyInstance) {
+  server.get('/api/health', async (_request, reply) => {
+    return reply.send({ status: 'ok' })
+  })
+
   server.get('/api/tasks', async (_request, reply) => {
     try {
       const tasks = await getAllTasks()

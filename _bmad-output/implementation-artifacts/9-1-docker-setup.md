@@ -1,6 +1,6 @@
 # Story 9.1: Docker Setup
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -28,43 +28,43 @@ so that the application can be started with a single `docker-compose up` command
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add `GET /api/health` endpoint to backend (AC: #2, #3)
-  - [ ] Add route in `backend/src/routes.ts` returning `{ status: 'ok' }` with HTTP 200
-  - [ ] Verify route is reachable at `http://localhost:3001/api/health` locally
+- [x] Task 1: Add `GET /api/health` endpoint to backend (AC: #2, #3)
+  - [x] Add route in `backend/src/routes.ts` returning `{ status: 'ok' }` with HTTP 200
+  - [x] Verify route is reachable at `http://localhost:3001/api/health` locally
 
-- [ ] Task 2: Create `backend/Dockerfile` (AC: #2)
-  - [ ] Stage 1 (build): `node:20-alpine`, install all deps, run `npm run build` (outputs to `dist/`)
-  - [ ] Stage 2 (production): `node:20-alpine`, install prod deps only (`--omit=dev`), copy `dist/`, run as non-root user
-  - [ ] `EXPOSE 3001`, `CMD ["node", "dist/server.js"]` (no `--env-file` flag — env vars come from compose)
+- [x] Task 2: Create `backend/Dockerfile` (AC: #2)
+  - [x] Stage 1 (build): `node:20-alpine`, install all deps, run `npm run build` (outputs to `dist/`)
+  - [x] Stage 2 (production): `node:20-alpine`, install prod deps only (`--omit=dev`), copy `dist/`, run as non-root user
+  - [x] `EXPOSE 3001`, `CMD ["node", "dist/server.js"]` (no `--env-file` flag — env vars come from compose)
 
-- [ ] Task 3: Create `backend/.dockerignore` (AC: #2)
-  - [ ] Exclude `node_modules/`, `dist/`, `.env`, `*.md`
+- [x] Task 3: Create `backend/.dockerignore` (AC: #2)
+  - [x] Exclude `node_modules/`, `dist/`, `.env`, `*.md`
 
-- [ ] Task 4: Create `frontend/nginx.conf` (AC: #2)
-  - [ ] Configure nginx to serve `/usr/share/nginx/html` on port 80
-  - [ ] Include `try_files $uri $uri/ /index.html` (SPA fallback)
-  - [ ] Enable gzip compression for JS/CSS/JSON
+- [x] Task 4: Create `frontend/nginx.conf` (AC: #2)
+  - [x] Configure nginx to serve `/usr/share/nginx/html` on port 80
+  - [x] Include `try_files $uri $uri/ /index.html` (SPA fallback)
+  - [x] Enable gzip compression for JS/CSS/JSON
 
-- [ ] Task 5: Create `frontend/Dockerfile` (AC: #2)
-  - [ ] Stage 1 (build): `node:20-alpine`, accept `ARG VITE_API_URL=http://localhost:3001`, run `npm ci && npm run build`
-  - [ ] Stage 2 (production): `nginx:alpine`, copy `dist/` to `/usr/share/nginx/html`, copy `nginx.conf`
-  - [ ] `EXPOSE 80`
+- [x] Task 5: Create `frontend/Dockerfile` (AC: #2)
+  - [x] Stage 1 (build): `node:20-alpine`, accept `ARG VITE_API_URL=http://localhost:3001`, run `npm ci && npm run build`
+  - [x] Stage 2 (production): `nginx:alpine`, copy `dist/` to `/usr/share/nginx/html`, copy `nginx.conf`
+  - [x] `EXPOSE 80`
 
-- [ ] Task 6: Create `frontend/.dockerignore` (AC: #2)
-  - [ ] Exclude `node_modules/`, `dist/`, `.env`
+- [x] Task 6: Create `frontend/.dockerignore` (AC: #2)
+  - [x] Exclude `node_modules/`, `dist/`, `.env`
 
-- [ ] Task 7: Create root-level `docker-compose.yml` (AC: #1, #3, #4)
-  - [ ] `postgres` service: `postgres:17-alpine`, volume for data persistence, mount `backend/schema.sql` to `/docker-entrypoint-initdb.d/`, healthcheck via `pg_isready`
-  - [ ] `backend` service: build `./backend`, set `PORT=3001` and `DATABASE_URL` env vars, `depends_on: postgres (service_healthy)`, healthcheck via wget to `/api/health`
-  - [ ] `frontend` service: build `./frontend` with `VITE_API_URL=http://localhost:3001` build arg, port `5173:80`, `depends_on: backend (service_healthy)`
-  - [ ] Named volume `postgres_data`
+- [x] Task 7: Create root-level `docker-compose.yml` (AC: #1, #3, #4)
+  - [x] `postgres` service: `postgres:17-alpine`, volume for data persistence, mount `backend/schema.sql` to `/docker-entrypoint-initdb.d/`, healthcheck via `pg_isready`
+  - [x] `backend` service: build `./backend`, set `PORT=3001` and `DATABASE_URL` env vars, `depends_on: postgres (service_healthy)`, healthcheck via wget to `/api/health`
+  - [x] `frontend` service: build `./frontend` with `VITE_API_URL=http://localhost:3001` build arg, port `5173:80`, `depends_on: backend (service_healthy)`
+  - [x] Named volume `postgres_data`
 
-- [ ] Task 8: Create root-level `.env.example` for docker-compose overrides (AC: #4)
-  - [ ] Document overridable variables: `POSTGRES_PASSWORD`, `VITE_API_URL`
+- [x] Task 8: Create root-level `.env.example` for docker-compose overrides (AC: #4)
+  - [x] Document overridable variables: `POSTGRES_PASSWORD`, `VITE_API_URL`
 
-- [ ] Task 9: Update `README.md` with Docker section (AC: #1)
-  - [ ] Add "Running with Docker" section with `docker-compose up` instructions
-  - [ ] Note prerequisites (Docker Desktop or Docker Engine + Compose plugin)
+- [x] Task 9: Update `README.md` with Docker section (AC: #1)
+  - [x] Add "Running with Docker" section with `docker-compose up` instructions
+  - [x] Note prerequisites (Docker Desktop or Docker Engine + Compose plugin)
 
 ## Dev Notes
 
@@ -309,6 +309,31 @@ claude-4.6-sonnet-medium-thinking (Cursor Agent)
 
 ### Debug Log References
 
+None.
+
 ### Completion Notes List
 
+- Added `GET /api/health` route to `backend/src/routes.ts` returning `{ status: 'ok' }` with HTTP 200. Added corresponding unit test in `backend/src/routes.test.ts` — all 16 backend tests pass.
+- Created multi-stage `backend/Dockerfile`: build stage uses `node:20-alpine` with full deps + TypeScript compile; production stage installs prod deps only (`--omit=dev`), runs as non-root `appuser`.
+- Created `backend/.dockerignore` excluding `node_modules`, `dist`, `.env`, `*.md`.
+- Created `frontend/nginx.conf` with SPA fallback (`try_files`) and gzip compression for JS/CSS/JSON/SVG.
+- Created multi-stage `frontend/Dockerfile`: build stage uses `node:20-alpine` with `ARG`/`ENV VITE_API_URL` for Vite build-time injection; production stage uses `nginx:alpine` (nginx runs as non-root by default).
+- Created `frontend/.dockerignore` excluding `node_modules`, `dist`, `.env`.
+- Created root-level `docker-compose.yml` with three services (postgres → backend → frontend) using `depends_on: condition: service_healthy`. `postgres` healthchecks via `pg_isready`; `backend` healthchecks via `wget /api/health`; `frontend` depends on backend health. Schema auto-initialised via `/docker-entrypoint-initdb.d/`. Named volume `postgres_data` for persistence.
+- Created `.env.example` documenting `POSTGRES_PASSWORD` and `VITE_API_URL` overrides.
+- Updated `README.md` with "Running with Docker" section covering prerequisites, startup, env override, and common commands.
+- All 16 backend tests pass; all 45 frontend tests pass — no regressions.
+
 ### File List
+
+- `backend/src/routes.ts` (modified — added `GET /api/health`)
+- `backend/src/routes.test.ts` (modified — added health endpoint test)
+- `backend/Dockerfile` (new)
+- `backend/.dockerignore` (new)
+- `frontend/Dockerfile` (new)
+- `frontend/nginx.conf` (new)
+- `frontend/.dockerignore` (new)
+- `docker-compose.yml` (new)
+- `.env.example` (new)
+- `README.md` (modified — added Docker section)
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified — status updated)
