@@ -22,12 +22,15 @@ test.describe('Epic 7: Core User Journeys', () => {
     ).toBeVisible()
 
     await page.getByPlaceholder('Add a task...').fill('Buy groceries')
-    await page.keyboard.press('Enter')
+    await page.getByPlaceholder('Add a task...').press('Enter')
 
     await expect(page.getByText('Buy groceries')).toBeVisible()
+    await expect(
+      page.getByText("Nothing here yet. What's on your mind?")
+    ).not.toBeVisible()
   })
 
-  test('completes a task with visual feedback and sorts to bottom', async ({ page }) => {
+  test('completes a task with visual feedback', async ({ page }) => {
     await seedTask('Walk the dog')
     await page.goto('/')
     await expect(page.getByText('Walk the dog')).toBeVisible()

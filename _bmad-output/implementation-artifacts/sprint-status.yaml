@@ -65,12 +65,12 @@ development_status:
   6-1-keyboard-navigation-screen-reader-support: done
   epic-6-retrospective: optional
 
-  epic-7: in-progress
-  7-1-playwright-e2e-test-suite: review
+  epic-7: done
+  7-1-playwright-e2e-test-suite: done
   epic-7-retrospective: optional
 
-  epic-8: backlog
-  8-1-qa-reports: backlog
+  epic-8: in-progress
+  8-1-qa-reports: ready-for-dev
   epic-8-retrospective: optional
 
   epic-9: backlog
