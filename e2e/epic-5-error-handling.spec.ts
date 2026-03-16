@@ -130,8 +130,8 @@ test.describe('Epic 5: Error Handling', () => {
 
     await page.getByRole('checkbox', { name: 'Mark Toggle me as complete' }).click()
 
-    await expect(page.getByRole('alert')).toBeVisible()
-    await expect(page.getByRole('alert')).toHaveText("Couldn't update the task. Give it another try.")
+    await expect(page.getByRole('status')).toBeVisible()
+    await expect(page.getByRole('status')).toHaveText("Couldn't update the task. Give it another try.")
   })
 
   test('checkbox stays unchecked when toggle fails', async ({ page }) => {
@@ -151,7 +151,7 @@ test.describe('Epic 5: Error Handling', () => {
     const checkbox = page.getByRole('checkbox', { name: 'Mark No optimistic update as complete' })
     await checkbox.click()
 
-    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(page.getByRole('status')).toBeVisible()
     await expect(
       page.getByRole('checkbox', { name: 'Mark No optimistic update as complete' })
     ).toHaveAttribute('aria-checked', 'false')
@@ -175,8 +175,8 @@ test.describe('Epic 5: Error Handling', () => {
 
     await page.getByRole('button', { name: 'Delete task: Cannot delete me' }).click()
 
-    await expect(page.getByRole('alert')).toBeVisible()
-    await expect(page.getByRole('alert')).toHaveText("Couldn't delete the task. Give it another try.")
+    await expect(page.getByRole('status')).toBeVisible()
+    await expect(page.getByRole('status')).toHaveText("Couldn't delete the task. Give it another try.")
   })
 
   test('task remains in the list when deletion fails', async ({ page }) => {
@@ -195,7 +195,7 @@ test.describe('Epic 5: Error Handling', () => {
 
     await page.getByRole('button', { name: 'Delete task: Still here' }).click()
 
-    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(page.getByRole('status')).toBeVisible()
     await expect(page.getByText('Still here')).toBeVisible()
   })
 
